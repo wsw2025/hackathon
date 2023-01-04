@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Login</title>
+  <link rel="stylesheet" href="/webjars/bootstrap/5.2.3/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+  <div style="width: 50%; padding: 100px 100px">
+    <h3 class="text-warning" th:text="${msg}"></h3>
+    <form action="/register" method="post">
+
+      <label class="col-sm-2 control-label">UserName:</label>
+      <input class="form-control" type="text" name="username" value=""><br>
+
+      <label class="col-sm-2 control-label">Nickname:</label>
+      <input class="form-control" type="text" name="nickname" value=""><br>
+
+      <label class="col-sm-2 control-label">Email:</label>
+      <input class="form-control" type="text" name="email" value=""><br>
+
+      <label class="col-sm-2 control-label">Password:</label>
+      <input class="form-control" type="password" name="password" value=""><br>
+
+      <input class="btn btn-primary" type="submit" value=" Submit "><br>
+    </form>
+  </div>
+</div>
+</body>
+</html>
+
