@@ -13,10 +13,10 @@
 </div>
 
 <form action="#" th:action="@{/register}" th:object="${UserInfo}" method="post">
-  <div><span>用户名</span><input type="text" th:field="*{userName}" />  <span th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></span></div>
-  <div><span>密码</span><input type="text" th:field="*{nickName}" />  <span th:if="${#fields.hasErrors('nickName')}" th:errors="*{nickName}"></span></div>
-  <div><span>密码</span><input type="text" th:field="*{email}" />  <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span></div>
-  <div><span>密码</span><input type="text" th:field="*{password}" />  <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span></div>
+  <div><span>Username:</span><input type="text" th:field="*{userName}"/>  <span th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></span></div>
+  <div><span>Nickname:</span><input type="text" th:field="*{nickName}" />  <span th:if="${#fields.hasErrors('nickName')}" th:errors="*{nickName}"></span></div>
+  <div><span>Email:</span><input type="text" th:field="*{email}" />  <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span></div>
+  <div><span>Password:</span><input type="text" th:field="*{password}" />  <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span></div>
   <input type="submit" />
 </form>
 </body>

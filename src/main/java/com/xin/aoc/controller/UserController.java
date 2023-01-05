@@ -1,5 +1,6 @@
 package com.xin.aoc.controller;
 
+import com.xin.aoc.form.UserForm;
 import com.xin.aoc.model.UserInfo;
 import com.xin.aoc.service.UserInfoService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,10 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class UserController {
@@ -47,16 +45,13 @@ public class UserController {
         return "redirect:/";
     }
 
+    @GetMapping (value="/register")
+    public String register(@ModelAttribute("UserInfo") @Validated UserForm user){
+        return "register";
 
-//    @RequestMapping("/register")
-//    public String register(@ModelAttribute("UserInfo") UserInfo user){
-//        if (user.getUserName() != null && user.getPassword()  != null) {
-//
-//        }
-//        return "/register";
-//    }
-    @RequestMapping(value="/register")
-    public String add(@ModelAttribute("UserInfo") @Validated UserInfo user,BindingResult rs){
+    }
+    @PostMapping(value="/register")
+    public String add(@ModelAttribute("UserInfo") @Validated UserForm user,BindingResult rs){
         logger.info("!!!!", user.toString());
         if (user.getUserName() != null && user.getPassword()  != null) {
             if (rs.hasErrors()) {
