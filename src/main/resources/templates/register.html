@@ -1,31 +1,23 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
-<head>
-  <title>Login</title>
-  <link rel="stylesheet" href="/webjars/bootstrap/5.2.3/css/bootstrap.min.css">
+
+<html  xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <title>xx</title>
 </head>
 <body>
-<div class="container">
-  <div style="width: 50%; padding: 100px 100px">
-    <h3 class="text-warning" th:text="${msg}"></h3>
-    <form action="/register" method="post">
 
-      <label class="col-sm-2 control-label">UserName:</label>
-      <input class="form-control" type="text" name="username" value=""><br>
-
-      <label class="col-sm-2 control-label">Nickname:</label>
-      <input class="form-control" type="text" name="nickname" value=""><br>
-
-      <label class="col-sm-2 control-label">Email:</label>
-      <input class="form-control" type="text" name="email" value=""><br>
-
-      <label class="col-sm-2 control-label">Password:</label>
-      <input class="form-control" type="password" name="password" value=""><br>
-
-      <input class="btn btn-primary" type="submit" value=" Submit "><br>
-    </form>
-  </div>
+<div th:object="${UserInfo}">
+  <p th:text="*{userName}"></p>
+  <p th:text="*{password}"></p>
 </div>
+
+<form action="#" th:action="@{/register}" th:object="${UserInfo}" method="post">
+  <div><span>用户名</span><input type="text" th:field="*{userName}" />  <span th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></span></div>
+  <div><span>密码</span><input type="text" th:field="*{nickName}" />  <span th:if="${#fields.hasErrors('nickName')}" th:errors="*{nickName}"></span></div>
+  <div><span>密码</span><input type="text" th:field="*{email}" />  <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span></div>
+  <div><span>密码</span><input type="text" th:field="*{password}" />  <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span></div>
+  <input type="submit" />
+</form>
 </body>
 </html>
-

@@ -16,12 +16,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         return userInfoMapper.getUserInfo(username, password);
     }
 
-    public void addUserInfo(String name, String email, String password, String nickName) {
-        UserInfo user = new UserInfo();
-        user.setUserName(name);
-        user.setEmail(email);
-        user.setPassword(password);
-        user.setNickName(nickName);
+    public void addUserInfo(UserInfo user) {
         userInfoMapper.insert(user);
     }
 }

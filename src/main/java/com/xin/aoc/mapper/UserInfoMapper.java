@@ -11,6 +11,6 @@ public interface UserInfoMapper {
     public UserInfo getUserInfo(@Param("userName") String username,
                                 @Param("password") String password);
 
-    @Insert("insert into user_info (user_name, email, password, nick_name) values (#{userName},#{email},#{password},#{nickName})")
-    void insert(UserInfo User);
+    @Insert("insert into user_info (user_name, nick_name, email, password) values (#{userName},#{nickName},#{email},#{password})")
+    void insert(UserInfo user);
 }
