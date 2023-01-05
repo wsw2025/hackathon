@@ -5,6 +5,8 @@ import com.xin.aoc.service.UserInfoService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.h2.engine.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class UserController {
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
     @Autowired
     private UserInfoService userInfoService;
 
@@ -52,16 +55,22 @@ public class UserController {
 //        }
 //        return "/register";
 //    }
-    @RequestMapping(value="/register",method= RequestMethod.POST)
+    @RequestMapping(value="/register")
     public String add(@ModelAttribute("UserInfo") @Validated UserInfo user,BindingResult rs){
-        if(rs.hasErrors()){
-            for (ObjectError error : rs.getAllErrors()) {
-                System.out.println(error.getDefaultMessage());
+        logger.info("!!!!", user.toString());
+        if (user.getUserName() != null && user.getPassword()  != null) {
+            if (rs.hasErrors()) {
+                for (ObjectError error : rs.getAllErrors()) {
+                    System.out.println(error.getDefaultMessage());
+                }
+                return "register";
             }
-            return "redirect:/register";
+            userInfoService.addUserInfo(user);
+            logger.info(user.getPassword());
+            return "redirect:user/index";
         }
-        userInfoService.addUserInfo(user);
-        System.out.println(user.getPassword());
-        return "user/index";
+
+        return "register";
+
     }
 }

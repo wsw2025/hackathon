@@ -1,10 +1,11 @@
 package com.xin.aoc.model;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
+
 
 @Data
 @Setter
