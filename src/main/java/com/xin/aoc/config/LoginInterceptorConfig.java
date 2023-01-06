@@ -14,30 +14,17 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class LoginInterceptorConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LoginInterceptor()).addPathPatterns("/user/**");
-        registry.addInterceptor(new AdminInterceptor()).addPathPatterns("/admin/**");
+        registry.addInterceptor(new LoginInterceptor(false)).addPathPatterns("/user/**");
+        registry.addInterceptor(new LoginInterceptor(true)).addPathPatterns("/admin/**");
     }
 
     class LoginInterceptor implements HandlerInterceptor {
         private Logger logger = LoggerFactory.getLogger(getClass());
+        private boolean checkAdmin = false;
 
-        @Override
-        public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
-                                 Object handler) throws Exception {
-            logger.error("getServletPath:" + request.getServletPath());
-            Object user = request.getSession().getAttribute("login_user");
-            if (user == null) {
-                request.getRequestDispatcher("/login").forward(request, response);
-                return false;
-            } else {
-                return true;
-            }
+        public LoginInterceptor(boolean checkAdmin) {
+            this.checkAdmin = checkAdmin;
         }
-    }
-
-    class AdminInterceptor implements HandlerInterceptor {
-        private Logger logger = LoggerFactory.getLogger(getClass());
-
         @Override
         public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
                                  Object handler) throws Exception {
@@ -46,7 +33,7 @@ public class LoginInterceptorConfig implements WebMvcConfigurer {
             if (user == null) {
                 request.getRequestDispatcher("/login").forward(request, response);
                 return false;
-            } else if (user.getIsAdmin() == 0) {
+            } else if (this.checkAdmin && user.getIsAdmin() == 0) {
                 request.getRequestDispatcher("/").forward(request, response);
                 return false;
             } else {

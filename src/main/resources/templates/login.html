@@ -1,22 +1,26 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html th:replace="~{layout::layout(~{::title},~{::section})}">
 <head>
-  <title>Login</title>
-  <link rel="stylesheet" href="/webjars/bootstrap/5.2.3/css/bootstrap.min.css">
+  <title>登录</title>
 </head>
 <body>
-<div class="container">
-  <div style="width: 50%; padding: 100px 100px">
-    <h3 class="text-warning" th:text="${msg}"></h3>
-    <form action="/login" method="post">
-      <label class="col-sm-2 control-label">UserName:</label>
-      <input class="form-control" type="text" name="username" value=""><br>
-      <label class="col-sm-2 control-label">Password:</label>
-      <input class="form-control" type="password" name="password" value=""><br>
-      <input class="btn btn-primary" type="submit" value=" Submit "><br>
-    </form>
-  </div>
-</div>
+<section class="col-md-4 mx-auto" style="max-width: 400px">
+  <form action="/login" method="post">
+    <h3>请输入用户名和密码:</h3>
+    <h4 class="text-warning" th:text="${msg}"></h4>
+    <div class="form-group mb-3">
+      <label for="username">username</label>
+      <input type="text" class="form-control" id="username" name="username">
+    </div>
+    <div class="form-group mb-3">
+      <label for="password">password</label>
+      <input type="password" class="form-control" id="password" name="password">
+    </div>
+    <div class="form-group mb-3">
+      <button type="submit" class="btn btn-primary col-md-4"> 登 录 </button>
+      <a class="p-4" href="/forget_password">忘记密码</a>
+    </div>
+  </form>
+</section>
 </body>
 </html>
-

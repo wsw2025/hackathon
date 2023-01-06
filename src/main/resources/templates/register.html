@@ -1,23 +1,59 @@
 <!DOCTYPE html>
-
-<html  xmlns:th="http://www.thymeleaf.org">
-<head lang="en">
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <title>xx</title>
+<html th:replace="~{layout::layout(~{::title},~{::section})}">
+<head>
+  <title>Register</title>
 </head>
-<body>
-
-<div th:object="${UserInfo}">
-  <p th:text="*{userName}"></p>
-  <p th:text="*{password}"></p>
-</div>
-
-<form action="#" th:action="@{/register}" th:object="${UserInfo}" method="post">
-  <div><span>Username:</span><input type="text" th:field="*{userName}"/>  <span th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></span></div>
-  <div><span>Nickname:</span><input type="text" th:field="*{nickName}" />  <span th:if="${#fields.hasErrors('nickName')}" th:errors="*{nickName}"></span></div>
-  <div><span>Email:</span><input type="text" th:field="*{email}" />  <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span></div>
-  <div><span>Password:</span><input type="text" th:field="*{password}" />  <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span></div>
-  <input type="submit" />
+<section class="col-md-4 mx-auto" style="max-width: 800px">
+<script type="text/javascript">
+  function checkCode() {
+    var load_url = "/get_check_code";
+    $.get(load_url, function(data) {
+      console.log("DATA", data);
+    });
+  }
+</script>
+<form th:action="@{/register}" th:object="${obj}" method="post">
+  <div class="row mb-3">
+    <label class="col-sm-3 control-label" for="userName">userName</label>
+    <div class="col-sm-9">
+      <input class="form-control" type="text" th:field="*{userName}" />
+    </div>
+    <span class="text-primary" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></span>
+  </div>
+  <div class="row mb-3">
+    <label class="col-sm-3 control-label" for="password">password</label>
+    <div class="col-sm-9">
+      <input class="form-control" type="password" th:field="*{password}" />
+    </div>
+    <span class="text-primary" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+  </div>
+  <div class="row mb-3">
+    <label class="col-sm-3 control-label" for="nickName">nickName</label>
+    <div class="col-sm-9">
+      <input class="form-control" type="text" th:field="*{nickName}" />
+    </div>
+    <span class="text-primary" th:if="${#fields.hasErrors('nickName')}" th:errors="*{nickName}"></span>
+  </div>
+  <div class="row mb-3">
+    <label class="col-sm-3 control-label" for="email">email</label>
+    <div class="col-sm-9">
+      <input class="form-control" type="text" th:field="*{email}" />
+    </div>
+    <span class="text-primary" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+  </div>
+  <div class="row mb-3">
+    <label class="col-sm-3 control-label" for="checkCode">checkCode</label>
+    <div class="col-sm-4">
+      <input class="form-control" type="text" value="" />
+    </div>
+    <div class="col-sm-5">
+      <button class="btn btn-primary" id="checkCode"
+              onclick="javascript:checkCode()">Get Check Code</button>
+    </div>
+  </div>
+  <div class="form-group mb-3">
+    <button type="submit" class="btn btn-primary col-md-4" id="submit" disabled>Submit</button>
+  </div>
 </form>
-</body>
+</section>
 </html>
