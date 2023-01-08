@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html th:replace="~{layout::layout(~{::title},~{::section})}">
+<head>
+  <title>首页</title>
+</head>
+<body>
+
+<section>
+  <h1 th:text="Leaderboard"></h1>
+  <table class="table table-condensed">
+    <tr>
+      <th>Ranking</th>
+      <th>Username</th>
+      <th>Score</th>
+    </tr>
+    <tr th:each="user, it : ${pageInfo.list}">
+      <td th:text="${it.index+1}"></td>
+      <td th:text="${user.userName}"></td>
+      <td th:text="${user.score}"></td>
+    </tr>
+  </table>
+
+  <div class="modal-footer no-margin-top">
+    <div class="col-md-6">
+      当前第 [[${pageInfo.pageNum}]]页,共 [[${pageInfo.pages}]] 页.一共 [[${pageInfo.total}]] 条记录
+    </div>
+
+    <ul class="pagination pull-right no-margin">
+      <li th:if="${pageInfo.hasPreviousPage}">
+        <a th:href="'/?page=1'">首页</a>
+      </li>
+
+      <li class="prev" th:if="${pageInfo.hasPreviousPage}">
+        <a th:href="'/?page='+${pageInfo.prePage}">
+          <i class="ace-icon fa fa-angle-double-left"></i>
+        </a>
+      </li>
+      <!--遍历条数-->
+      <li th:each="nav:${pageInfo.navigatepageNums}">
+        <a th:href="'/?page='+${nav}" th:text="${nav}" th:if="${nav != pageInfo.pageNum}"></a>
+        <span style="font-weight: bold;background: #6faed9;" th:if="${nav == pageInfo.pageNum}" th:text="${nav}" ></span>
+      </li>
+
+      <li class="next" th:if="${pageInfo.hasNextPage}">
+        <a th:href="'/?page='+${pageInfo.nextPage}">
+          <i class="ace-icon fa fa-angle-double-right"></i>
+        </a>
+      </li>
+
+      <li>
+        <a th:href="'/?page='+${pageInfo.pages}">尾页</a>
+      </li>
+    </ul>
+  </div>
+
+</section>
+</body>
+</html>

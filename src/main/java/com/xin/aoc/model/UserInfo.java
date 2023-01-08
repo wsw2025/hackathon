@@ -10,4 +10,5 @@ public class UserInfo {
     private String email;
     private String nickName;
     private int isAdmin;
+    public int score;
 }

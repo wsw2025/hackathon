@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html th:replace="~{layout::layout(~{::title},~{::section})}">
+<head>
+    <title>首页</title>
+</head>
+<body>
+<section class="mb-3">
+
+        <h1 th:text="${problemInfo.curDate}"></h1>
+        <div th:text="${problemInfo.problem}"> </div>
+
+
+</section>
+
+<section  style="max-width: 400px">
+    <form action="/problems" method="post">
+        <input type="hidden" name="id" id="id" th:value="${problemInfo.problemId}">
+        <div class="form-group mb-3">
+            <label for="answer">Answer:</label>
+            <input type="text" class="form-control" id="answer" name="answer">
+        </div>
+        <div class="form-group mb-3">
+            <button type="submit" class="btn btn-primary col-md-4">Submit:</button>
+        </div>
+    </form>
+
+</section>
+
+</body>
+</html>

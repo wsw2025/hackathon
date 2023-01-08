@@ -1,6 +1,6 @@
 package com.xin.aoc.controller;
 
-import com.xin.aoc.model.UserForm;
+import com.xin.aoc.form.UserForm;
 import com.xin.aoc.model.UserInfo;
 import com.xin.aoc.service.UserInfoService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +34,7 @@ public class UserController {
                 session.setAttribute("login_user", userInfo);
                 return "redirect:/";
             }
-            request.setAttribute("msg", "username or password is error!");
+            request.setAttribute("msg", "incorrect username or password");
         }
         return "login";
     }
@@ -46,7 +45,6 @@ public class UserController {
         request.getSession().invalidate();
         return "redirect:/";
     }
-
 
     @GetMapping(value="/register")
     public String register(@ModelAttribute("obj") UserForm user) {

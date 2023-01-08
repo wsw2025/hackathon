@@ -7,6 +7,8 @@ import com.xin.aoc.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserInfoServiceImpl implements UserInfoService {
     @Autowired
@@ -19,5 +21,9 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     public void addUserInfo(UserForm user) {
         userInfoMapper.insert(user);
+    }
+
+    public List<UserInfo> getAllUserInfo(){
+        return userInfoMapper.getAllUserInfo();
     }
 }
