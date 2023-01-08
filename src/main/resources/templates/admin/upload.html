@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html th:replace="~{layout::layout(~{::title},~{::section})}">
+<head>
+  <title>Register</title>
+</head>
+<section class="col-md-4 mx-auto" style="max-width: 800px">
+  <script type="text/javascript">
+  function checkCode() {
+    var load_url = "/get_check_code";
+    $.get(load_url, function(data) {
+      console.log("DATA", data);
+    });
+  }
+</script>
+  <form th:action="@{/admin/upload}" th:object="${ProblemForm}" method="post">
+
+    <div class="row mb-3">
+      <label class="col-sm-3 control-label" for="cur_date">Date:</label>
+      <div class="col-sm-9">
+        <input class="form-control" type="text" th:field="*{cur_date}" />
+      </div>
+      <span class="text-primary" th:if="${#fields.hasErrors('cur_date')}" th:errors="*{cur_date}"></span>
+    </div>
+
+    <div class="row mb-3">
+      <label class="col-sm-3 control-label" for="problem">Problem:</label>
+      <div class="col-sm-9">
+        <input class="form-control" type="text" th:field="*{problem}" />
+      </div>
+      <span class="text-primary" th:if="${#fields.hasErrors('problem')}" th:errors="*{problem}"></span>
+    </div>
+
+    <div class="row mb-3">
+      <label class="col-sm-3 control-label" for="answer">Answer:</label>
+      <div class="col-sm-9">
+        <input class="form-control" type="text" th:field="*{answer}" />
+      </div>
+      <span class="text-primary" th:if="${#fields.hasErrors('answer')}" th:errors="*{answer}"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary col-md-4" id="submit">Submit</button>
+    </div>
+
+  </form>
+</section>
+</html>
