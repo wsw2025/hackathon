@@ -11,8 +11,8 @@ create table if not exists user_info (
 create table if not exists problems (
    problem_id int auto_increment primary key,
    cur_date varchar(64) not null unique,
-   problem varchar(64) not null,
-   answer varchar(64) not null
+   problem varchar(10000) not null,
+   answer varchar(10000) not null
 );
 
 create table if not exists records (

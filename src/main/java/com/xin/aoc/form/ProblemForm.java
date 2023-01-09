@@ -10,7 +10,7 @@ import org.springframework.format.annotation.NumberFormat;
 @Data
 public class ProblemForm {
     @Pattern(regexp = "^\\d{4}\\-(0?[1-9]|1[012])\\-(0?[1-9]|[12][0-9]|3[01])$",message= "date format not valid")
-    private String cur_date;
+    private String curDate;
 
     @Length(min = 2, max = 10000, message = "problem length must be 2-10000 characters long")
     private String problem;

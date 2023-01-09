@@ -11,7 +11,7 @@ public class AdminServiceImpl implements AdminService {
     @Autowired
     private AdminMapper adminMapper;
     public void addProblem(ProblemForm problem){
-        System.out.println(problem.getCur_date()+ "!"+problem.getProblem());
+        System.out.println(problem.getCurDate()+ "!"+problem.getProblem());
         adminMapper.insert(problem);
     }
 }

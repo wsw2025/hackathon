@@ -29,7 +29,7 @@ public class AdminController {
     }
     @PostMapping(value="/admin/upload")
     public String add(@ModelAttribute("ProblemForm") @Validated ProblemForm problem, BindingResult rs){
-        if (problem.getProblem() != null && problem.getCur_date()  != null) {
+        if (problem.getProblem() != null && problem.getCurDate()  != null) {
             if (rs.hasErrors()) {
                 for (ObjectError error : rs.getAllErrors()) {
                     System.out.println(error.getDefaultMessage());
