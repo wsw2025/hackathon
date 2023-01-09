@@ -2,22 +2,36 @@ package com.xin.aoc.controller;
 
 import com.xin.aoc.form.UserForm;
 import com.xin.aoc.model.UserInfo;
+import com.xin.aoc.service.MailService;
 import com.xin.aoc.service.UserInfoService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.util.DigestUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Random;
+import java.util.Set;
 
 @Controller
 public class UserController {
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    static Logger logger = LoggerFactory.getLogger(UserController.class);
+    static final String CHECK_CODE = "check_code";
+    static final String PASSWD_SUFFIX = "702e4946e6db9b7a74b921fe85e83f32";
+
+    @Autowired
+    private Validator validator;
+
+    @Autowired
+    private MailService mailService;
 
     @Autowired
     private UserInfoService userInfoService;
@@ -27,8 +41,9 @@ public class UserController {
                         @RequestParam(required=false,value="password") String password,
                         HttpServletRequest request) {
         if (username != null && password != null) {
-            UserInfo userInfo = userInfoService.getUserInfo(username, password);
-            if (userInfo != null) {
+            password = getPasswordMd5(password);
+            UserInfo userInfo = userInfoService.getUserInfo(username);
+            if (userInfo != null && password.equals(userInfo.getPassword())) {
                 userInfo.setPassword("");
                 HttpSession session = request.getSession();
                 session.setAttribute("login_user", userInfo);
@@ -46,33 +61,75 @@ public class UserController {
         return "redirect:/";
     }
 
-    @GetMapping(value="/register")
+    @GetMapping("/register")
     public String register(@ModelAttribute("obj") UserForm user) {
         return "register";
     }
 
-    @PostMapping(value="/register")
-    public String register(@ModelAttribute("obj") @Validated UserForm user, BindingResult rs) {
-        logger.error("user:" + user.toString() + "," + rs.hasErrors());
+    @PostMapping("/register")
+    public String register(@ModelAttribute("obj") @Validated UserForm user,
+                           BindingResult rs, HttpServletRequest request, Model model) {
         if (rs.hasErrors()) {
-            logger.error("ERROR:" + user.toString());
             return "register";
+        }
+        String code = (String)request.getSession().getAttribute(CHECK_CODE);
+        request.getSession().removeAttribute(CHECK_CODE);
+        if (code == null || code.equals(user.getCheckCode()) == false) {
+            model.addAttribute("msg", "verification code not match");
+            return "register";
+        }
+
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUserName(user.getUserName());
+        userInfo.setEmail(user.getEmail());
+        userInfo.setNickName(user.getNickName());
+        userInfo.setPassword(getPasswordMd5(user.getPassword()));
+        if (userInfoService.addUserInfo(userInfo) == true) {
+            model.addAttribute("register_success", "ok");
+        } else {
+            model.addAttribute("msg", "add user failure.");
         }
         return "register";
     }
 
-    @RequestMapping(value="/get_check_code")
-    @ResponseBody
-    public String get_check_code(HttpServletRequest request) {
+    private String getPasswordMd5(String password) {
+        password += PASSWD_SUFFIX;
+        return DigestUtils.md5DigestAsHex(password.getBytes());
+    }
+
+    private String generateCode(int length) {
         String str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         Random random = new Random();
         StringBuffer code = new StringBuffer();
-        for (int i = 0; i < 6; i++) {
-            int number = random.nextInt(62);
+        for (int i = 0; i < length; i++) {
+            int number = random.nextInt(str.length() - 1);
             code.append(str.charAt(number));
         }
-        logger.info("checkCode", code.toString());
-        request.getSession().setAttribute("check_code", code.toString());
+        return code.toString();
+    }
+
+    @RequestMapping("/get_check_code")
+    @ResponseBody
+    public String getCheckCode(UserForm user, HttpServletRequest request) {
+        Set<ConstraintViolation<UserForm>> error = validator.validateProperty(user, "email");
+        if (error.size() > 0) {
+            return error.iterator().next().getMessage();
+        }
+        String code = generateCode(6);
+        request.getSession().setAttribute(CHECK_CODE, code.toString());
+
+        String subject = "verification code";
+        String bodyText = String.format("<html><h1>%s</h1></html>", code);
+        if (mailService.sendMessage(user.getEmail(), subject, bodyText) == false) {
+            return "send mail error.";
+        }
         return "ok";
+    }
+
+    @RequestMapping("/check_username")
+    @ResponseBody
+    public String checkUserName(@RequestParam(value = "userName") String userName) {
+        UserInfo userInfo = userInfoService.getUserInfo(userName);
+        return (userInfo != null ? "exist" : "ok");
     }
 }

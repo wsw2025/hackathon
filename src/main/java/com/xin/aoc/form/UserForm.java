@@ -18,4 +18,5 @@ public class UserForm {
     @Length(min = 2, max = 32, message = "password length must be 2-15 characters long")
     private String nickName;
 
+    private String checkCode;
 }

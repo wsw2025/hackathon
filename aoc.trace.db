@@ -1,5 +1,0 @@
-2023-01-08 13:03:49 jdbc[3]: exception
-org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "select count(0) from ( \000aselect user_id, score from user_info where\000a [*]) tmp_count"; expected "INTERSECTS (, NOT, EXISTS, UNIQUE, INTERSECTS"; SQL statement:
-select count(0) from ( 
-select user_id, score from user_info where
- ) tmp_count [42001-214]

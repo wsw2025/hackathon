@@ -3,21 +3,55 @@
 <head>
   <title>Register</title>
 </head>
-<section class="col-md-4 mx-auto" style="max-width: 800px">
+<section th:if="${register_success != null}">
+  <h1>Register Success!</h1>
+</section>
+<section class="col-md-8 mx-auto" style="max-width: 800px" th:if="${register_success == null}">
 <script type="text/javascript">
-  function checkCode() {
+  function checkTime(left) {
+    if (left <= 0) {
+      $("#btnCheckCode").prop('value', 'Get verification code');
+      $("#btnCheckCode").removeAttr('disabled');
+    } else {
+      $("#btnCheckCode").prop('value', 'after ' + left + ' seconds');
+      $("#btnCheckCode").attr('disabled', true);
+      setTimeout('checkTime('+(left-1)+')', 1000);
+    }
+  }
+  function doCheckCode() {
     var load_url = "/get_check_code";
-    $.get(load_url, function(data) {
-      console.log("DATA", data);
+    var code = $("#email").val();
+    $.post(load_url, {email: code}, function(data) {
+      if (data == "ok") {
+        checkTime(60);
+      } else {
+        alert("Error:" + data);
+      }
+    });
+  }
+  function doCheckUsername() {
+    var load_url = "/check_username";
+    var userName = $("#userName").val();
+    $.post(load_url, {userName: userName}, function(data) {
+      if (data == "ok") {
+        $("#labUserName").hide();
+        $("#btnSubmit").removeAttr('disabled');
+      } else {
+        $("#labUserName").show();
+        $("#btnSubmit").attr('disabled', true);
+      }
     });
   }
 </script>
 <form th:action="@{/register}" th:object="${obj}" method="post">
+  <h1 th:text="${msg}"></h1>
   <div class="row mb-3">
     <label class="col-sm-3 control-label" for="userName">userName</label>
     <div class="col-sm-9">
-      <input class="form-control" type="text" th:field="*{userName}" />
+      <input class="form-control" oninput="javascript:doCheckUsername()"
+             type="text" th:field="*{userName}" />
     </div>
+    <span id="labUserName" class="text-primary" style="display: none">username already exists</span>
     <span class="text-primary" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></span>
   </div>
   <div class="row mb-3">
@@ -42,17 +76,17 @@
     <span class="text-primary" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
   </div>
   <div class="row mb-3">
-    <label class="col-sm-3 control-label" for="checkCode">checkCode</label>
+    <label class="col-sm-3 control-label" for="checkCode">Verification code</label>
     <div class="col-sm-4">
-      <input class="form-control" type="text" value="" />
+      <input class="form-control" type="text" value="" name="checkCode"/>
     </div>
     <div class="col-sm-5">
-      <button class="btn btn-primary" id="checkCode"
-              onclick="javascript:checkCode()">Get Check Code</button>
+      <input type="button" class="btn btn-default" id="btnCheckCode"
+              onclick="javascript:doCheckCode()" value="Get verification code" />
     </div>
   </div>
   <div class="form-group mb-3">
-    <button type="submit" class="btn btn-primary col-md-4" id="submit" disabled>Submit</button>
+    <button type="submit" class="btn btn-primary col-md-4" id="btnSubmit">Submit</button>
   </div>
 </form>
 </section>

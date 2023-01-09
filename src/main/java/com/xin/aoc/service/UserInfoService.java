@@ -8,9 +8,9 @@ import org.h2.engine.User;
 import java.util.List;
 
 public interface UserInfoService {
-    public UserInfo getUserInfo(String username, String password);
+    public UserInfo getUserInfo(String username);
 
-    public void addUserInfo(UserForm user);
+    public boolean addUserInfo(UserInfo user);
 
     public List<UserInfo> getAllUserInfo();
 
