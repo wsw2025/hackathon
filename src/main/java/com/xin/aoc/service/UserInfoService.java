@@ -14,4 +14,6 @@ public interface UserInfoService {
 
     public List<UserInfo> getAllUserInfo();
 
+    public boolean changeUserInfo(UserInfo user);
+
 }

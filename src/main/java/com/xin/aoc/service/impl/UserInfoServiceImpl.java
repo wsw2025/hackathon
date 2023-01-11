@@ -33,6 +33,16 @@ public class UserInfoServiceImpl implements UserInfoService {
         return false;
     }
 
+    public boolean changeUserInfo(UserInfo user) {
+        try {
+            userInfoMapper.change(user);
+            return true;
+        } catch (Exception e) {
+            logger.error(e.toString(), e);
+        }
+        return false;
+    }
+
     public List<UserInfo> getAllUserInfo(){
         return userInfoMapper.getAllUserInfo();
     }

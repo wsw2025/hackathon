@@ -74,7 +74,8 @@ public class UserController {
         }
         String code = (String)request.getSession().getAttribute(CHECK_CODE);
         request.getSession().removeAttribute(CHECK_CODE);
-        if (code == null || code.equals(user.getCheckCode()) == false) {
+        logger.info(code + " " +user.getCheckCode());
+        if (code == null || !code.equals(user.getCheckCode())) {
             model.addAttribute("msg", "verification code not match");
             return "register";
         }
@@ -84,12 +85,12 @@ public class UserController {
         userInfo.setEmail(user.getEmail());
         userInfo.setNickName(user.getNickName());
         userInfo.setPassword(getPasswordMd5(user.getPassword()));
-        if (userInfoService.addUserInfo(userInfo) == true) {
+        if (userInfoService.addUserInfo(userInfo)) {
             model.addAttribute("register_success", "ok");
         } else {
             model.addAttribute("msg", "add user failure.");
         }
-        return "register";
+        return "redirect:/login";
     }
 
     private String getPasswordMd5(String password) {
@@ -132,4 +133,51 @@ public class UserController {
         UserInfo userInfo = userInfoService.getUserInfo(userName);
         return (userInfo != null ? "exist" : "ok");
     }
+
+    @RequestMapping("/check_username_not")
+    @ResponseBody
+    public String checkUserNameNot(@RequestParam(value = "userName") String userName) {
+        UserInfo userInfo = userInfoService.getUserInfo(userName);
+        return (userInfo == null ? "not exist" : "ok");
+    }
+
+    @GetMapping("/forget_password")
+    public String forget_password(@ModelAttribute("obj") UserForm user) {
+        return "forget_password";
+    }
+
+    @PostMapping("/forget_password")
+    public String forget_password(@ModelAttribute("obj") @Validated UserForm user,
+                           BindingResult rs, HttpServletRequest request, Model model) {
+        if (rs.hasErrors()) {
+            return "register";
+        }
+        String code = (String)request.getSession().getAttribute(CHECK_CODE);
+        request.getSession().removeAttribute(CHECK_CODE);
+        logger.info(code + " " +user.getCheckCode());
+        if (code == null || !code.equals(user.getCheckCode())) {
+            model.addAttribute("msg", "verification code not match");
+            return "forget_password";
+        }
+
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUserName(user.getUserName());
+        userInfo.setEmail(user.getEmail());
+        userInfo.setNickName(user.getNickName());
+        userInfo.setPassword(getPasswordMd5(user.getPassword()));
+        if (userInfoService.changeUserInfo(userInfo)) {
+            model.addAttribute("reset_success", "ok");
+        } else {
+            model.addAttribute("msg", "password reset failed.");
+        }
+        return "redirect:/login";
+    }
+
+    @GetMapping("/user/home")
+    public String edit(@ModelAttribute("obj") UserForm user) {
+        return "user/home";
+    }
+
+
+
 }

@@ -5,6 +5,6 @@ import com.xin.aoc.form.UserForm;
 import org.apache.ibatis.annotations.Insert;
 
 public interface AdminMapper {
-    @Insert("insert into problems (cur_date, problem, answer) values (#{cur_date},#{problem},#{answer})")
+    @Insert("insert into problems (cur_date, problem, answer) values (#{curDate},#{problem},#{answer})")
     void insert(ProblemForm problem);
 }

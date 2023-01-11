@@ -44,7 +44,7 @@
   }
 </script>
 <form th:action="@{/register}" th:object="${obj}" method="post">
-  <h1 th:text="${msg}"></h1>
+
   <div class="row mb-3">
     <label class="col-sm-3 control-label" for="userName">userName</label>
     <div class="col-sm-9">
@@ -54,6 +54,15 @@
     <span id="labUserName" class="text-primary" style="display: none">username already exists</span>
     <span class="text-primary" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></span>
   </div>
+
+  <div class="row mb-3">
+    <label class="col-sm-3 control-label" for="nickName">nickname</label>
+    <div class="col-sm-9">
+      <input class="form-control" type="text" th:field="*{nickName}" />
+    </div>
+    <span class="text-primary" th:if="${#fields.hasErrors('nickName')}" th:errors="*{nickName}"></span>
+  </div>
+
   <div class="row mb-3">
     <label class="col-sm-3 control-label" for="password">password</label>
     <div class="col-sm-9">
@@ -61,13 +70,7 @@
     </div>
     <span class="text-primary" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
   </div>
-  <div class="row mb-3">
-    <label class="col-sm-3 control-label" for="nickName">nickName</label>
-    <div class="col-sm-9">
-      <input class="form-control" type="text" th:field="*{nickName}" />
-    </div>
-    <span class="text-primary" th:if="${#fields.hasErrors('nickName')}" th:errors="*{nickName}"></span>
-  </div>
+
   <div class="row mb-3">
     <label class="col-sm-3 control-label" for="email">email</label>
     <div class="col-sm-9">
@@ -85,6 +88,9 @@
               onclick="javascript:doCheckCode()" value="Get verification code" />
     </div>
   </div>
+
+  <h1 th:text="${msg}"></h1>
+
   <div class="form-group mb-3">
     <button type="submit" class="btn btn-primary col-md-4" id="btnSubmit">Submit</button>
   </div>

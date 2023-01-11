@@ -4,9 +4,12 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.UniqueElements;
+
 @Data
 public class UserForm {
     @Length(min = 2, max = 32, message = "username length must be 2-15 characters long")
+//    @UniqueElements(message = "username existed")
     private String userName;
 
     @Length(min = 2, max = 32, message = "password length must be 2-15 characters long")

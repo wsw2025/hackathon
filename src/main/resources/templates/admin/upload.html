@@ -4,22 +4,15 @@
   <title>Register</title>
 </head>
 <section class="col-md-4 mx-auto" style="max-width: 800px">
-  <script type="text/javascript">
-  function checkCode() {
-    var load_url = "/get_check_code";
-    $.get(load_url, function(data) {
-      console.log("DATA", data);
-    });
-  }
-</script>
+
   <form th:action="@{/admin/upload}" th:object="${ProblemForm}" method="post">
 
     <div class="row mb-3">
-      <label class="col-sm-3 control-label" for="cur_date">Date:</label>
+      <label class="col-sm-3 control-label" for="curDate">Date:</label>
       <div class="col-sm-9">
-        <input class="form-control" type="text" th:field="*{cur_date}" />
+        <input class="form-control" type="text" th:field="*{curDate}" />
       </div>
-      <span class="text-primary" th:if="${#fields.hasErrors('cur_date')}" th:errors="*{cur_date}"></span>
+      <span class="text-primary" th:if="${#fields.hasErrors('curDate')}" th:errors="*{curDate}"></span>
     </div>
 
     <div class="row mb-3">
