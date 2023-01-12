@@ -5,7 +5,7 @@
         <img src="/aoc.jpg" width="40">
     </a>
     <ul class="navbar-nav mx-auto">
-        <li><a href="/" class="nav-link px-2" th:text="#{top_home}">HOME</a></li>
+        <li><a href="/" class="nav-link px-2" th:text="#{top_home}">Home</a></li>
         <li><a href="/leaderboard" class="nav-link px-2" th:text="#{top_ranking}">Ranking</a></li>
         <li><a href="#" class="nav-link px-2" th:text="#{top_topic}">Topic</a></li>
         <li><a href="#" class="nav-link px-2" th:text="#{top_about}">About</a></li>
@@ -23,6 +23,8 @@
                 <label th:text="${session.login_user.nickName}"></label>
             </a>
             <div class="dropdown-menu">
+                <a class="dropdown-item" href="/setting" th:text="#{top_Setting}">Setting</a>
+                <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="/logout" th:text="#{top_logout}">Logout</a>
             </div>
         </li>

@@ -173,9 +173,9 @@ public class UserController {
         return "redirect:/login";
     }
 
-    @GetMapping("/user/home")
+    @GetMapping("/user/setting")
     public String edit(@ModelAttribute("obj") UserForm user) {
-        return "user/home";
+        return "user/setting";
     }
 
 
