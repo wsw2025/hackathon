@@ -43,21 +43,6 @@
     </div>
   </div>
 
-
-  <div class="center">
-    <div class="pagination">
-      <li th:each="nav:${submissions.navigatepageNums}">
-        <a th:href="'submissions?page='+${nav} + '&id=' + ${problemInfo.problemId} " th:text="${nav}"></a>
-      </li>
-      <li class="pull-right ">
-        <a th:href="'submissions?page=' + ${submissions.pages} + '&id=' + ${problemInfo.problemId}">Last Page</a>
-      </li>
-
-
-
-    </div>
-  </div>
-
 </section>
 
 </body>
