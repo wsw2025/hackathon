@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html th:replace="~{layout::layout(~{::title},~{::section})}">
 <head>
-  <title>登录</title>
+  <title>Login</title>
 </head>
 <body>
 <section class="col-md-4 mx-auto" style="max-width: 400px">
   <form action="/login" method="post">
-    <h3>请输入用户名和密码:</h3>
+    <h3>Please enter your username and password:</h3>
     <h4 class="text-warning" th:text="${msg}"></h4>
     <div class="form-group mb-3">
       <label for="username">username</label>
@@ -17,8 +17,8 @@
       <input type="password" class="form-control" id="password" name="password">
     </div>
     <div class="form-group mb-3">
-      <button type="submit" class="btn btn-primary col-md-4"> 登 录 </button>
-      <a class="p-4" href="/forget_password">忘记密码</a>
+      <button type="submit" class="btn btn-primary col-md-4">login</button>
+      <a class="p-4" href="/forget_password">forgot password</a>
     </div>
   </form>
 </section>

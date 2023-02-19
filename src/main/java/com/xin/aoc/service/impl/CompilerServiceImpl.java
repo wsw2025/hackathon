@@ -143,4 +143,14 @@ public class CompilerServiceImpl implements CompilerService {
 
         return "execute error2.";
     }
+
+//    public static void main(String[] args) {
+//        CompilerServiceImpl c = new CompilerServiceImpl();
+////        String code = "#include <stdio.h>\n" +
+////                "int main() { printf(\"hello\\n\"); return 0;} \n";
+//        String ret= c.compile("test",code);
+//        String ret2= c.execute("test","");
+//        logger.info(ret2);
+//
+//    }
 }

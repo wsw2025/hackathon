@@ -17,6 +17,18 @@ import org.springframework.util.DigestUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 import java.util.Random;
 import java.util.Set;
@@ -129,9 +141,19 @@ public class UserController {
 
     @RequestMapping("/check_username")
     @ResponseBody
-    public String checkUserName(@RequestParam(value = "userName") String userName) {
+    public String checkUserName(@RequestParam(value = "userName") String userName, HttpServletRequest request) {
         UserInfo userInfo = userInfoService.getUserInfo(userName);
-        return (userInfo != null ? "exist" : "ok");
+        UserInfo oldUser = (UserInfo)request.getSession().getAttribute("login_user");
+
+
+        if((userInfo != null) && !(oldUser.getUserName().equals(userName))){
+            logger.info("exist!");
+            System.out.println(userName+""+oldUser.getUserName()+'!');
+            System.out.println(userName==oldUser.getUserName());
+            return "exist";
+        }else{
+            return "ok";
+        }
     }
 
     @RequestMapping("/check_username_not")
@@ -174,10 +196,84 @@ public class UserController {
     }
 
     @GetMapping("/user/setting")
-    public String edit(@ModelAttribute("obj") UserForm user) {
+    public String edit(@ModelAttribute("obj") UserForm userInfo, Model model, HttpServletRequest request) {
+
+        HttpSession session = request.getSession();
+        UserInfo user = (UserInfo)request.getSession().getAttribute("login_user");
+        userInfo.setNickName(user.getNickName());
+        userInfo.setEmail(user.getEmail());
+        userInfo.setUserName(user.getUserName());
+        userInfo.setPassword(user.getPassword());
+
+        session.setAttribute("login_user", user);
+        model.addAttribute("username", user.getUserName());
         return "user/setting";
     }
+    public void uploadFile(MultipartFile file, UserInfo user){
+        String UPLOADED_FOLDER = "./images/";
+        File folder = new File(UPLOADED_FOLDER);
+        if (!folder.exists())
+            folder.mkdirs();
 
+        String originalFilename = file.getOriginalFilename();
+        int dotIndex = originalFilename.lastIndexOf(".");
 
+        String fileExtension = originalFilename.substring(dotIndex);
+        File newFile = new File(folder, user.getUserId() + fileExtension);
 
+        if (newFile.exists()) {
+            newFile.delete();
+        }
+        try {
+            byte[] bytes = file.getBytes();
+            String url = "/images/" + user.getUserId() + fileExtension+"?t="+System.currentTimeMillis();
+            userInfoService.addImg(user.getUserId(), url);
+            user.setImage(url);
+            Files.write(newFile.toPath(), bytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        logger.info(file.getOriginalFilename()+"profile_pic name");
+    }
+    @PostMapping("/user/setting")
+    public String handleFileUpload(@ModelAttribute("obj") UserForm userInfo,
+                                   @RequestParam(value="file", required = false) MultipartFile file,
+                                   @Validated UserForm editUser,
+                                   HttpServletRequest request,
+                                   BindingResult rs,
+                                   Model model) {
+        if (rs.hasErrors()) {
+            return "user/setting";
+        }
+
+        UserInfo user = (UserInfo)request.getSession().getAttribute("login_user");
+        HttpSession session = request.getSession();
+        session.setAttribute("login_user", user);
+        if (file!=null) {
+            uploadFile(file, user);
+        }
+        UserInfo newUser = new UserInfo();
+        if (editUser!=null) {
+            newUser.setUserId(user.getUserId());
+            newUser.setImage(user.getImage());
+            newUser.setUserName(editUser.getUserName());
+            newUser.setEmail(editUser.getEmail());
+            newUser.setNickName(editUser.getNickName());
+            newUser.setPassword(getPasswordMd5(editUser.getPassword()));
+        }
+        logger.info(" !!"+newUser.getUserName());
+        if (userInfoService.changeAllUserInfo(newUser)) {
+            userInfo.setNickName(newUser.getImage());
+            userInfo.setNickName(newUser.getNickName());
+            userInfo.setEmail(newUser.getEmail());
+            userInfo.setUserName(newUser.getUserName());
+            userInfo.setPassword(newUser.getPassword());
+            session.setAttribute("login_user", newUser);
+            model.addAttribute("msg", "reset success");
+        } else {
+            model.addAttribute("msg", "reset failed");
+        }
+
+        return "user/setting";
+    }
 }

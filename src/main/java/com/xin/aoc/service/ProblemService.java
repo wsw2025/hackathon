@@ -9,5 +9,7 @@ public interface ProblemService {
     Problem getProblem(String id);
     List<Problem> getProblems();
 
+    List<Problem> getProblemsByKey(String key);
+
     void addScore(int id);
 }

@@ -16,4 +16,8 @@ public interface UserInfoService {
 
     public boolean changeUserInfo(UserInfo user);
 
+    public boolean changeAllUserInfo(UserInfo user);
+
+    public void addImg(int id, String scr);
+
 }

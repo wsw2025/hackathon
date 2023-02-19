@@ -1,56 +1,91 @@
 <!DOCTYPE html>
 <html th:replace="~{layout::layout(~{::title},~{::section})}">
 <head>
-    <title>首页</title>
+    <title>Home</title>
 </head>
 <body>
 
     <section>
+        <style>
+ul.pagination {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+}
+
+ul.pagination li {display: inline;}
+
+ul.pagination li a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+    border: 1px solid #ddd;
+}
+
+ul.pagination li a.active {
+    background-color: #4CAF50;
+    color: white;
+    border: 1px solid #4CAF50;
+}
+
+ul.pagination li a:hover:not(.active) {background-color: #ddd;}
+
+div.center {text-align: center;}
+</style>
        <h1 th:text="Challenges"></h1>
-        <table class="table table-condensed">
+        <table class="table table-condensed" id = "problems">
+            <tr>
+                <th>Status</th>
+                <th>Problem</th>
+                <th>Category</th>
+                <th>Difficulty</th>
+
+            </tr>
             <tr th:each="problem : ${pageInfo.list}">
-<!--                <td th:text="${problem.problem_id}"></td>-->
                 <td>
+                    <div th:each="status : ${statusInfo}">
+                        <p  style="color:green" th:if="${status==problem.problemId}">
+                        Solved <span>&#10003;</span> </p>
+                    </div>
+                </td>
+                <td>
+
                     <a th:href="@{/problems?id={id}(id=${problem.problemId})}"
-                       th:text="${problem.curDate}"></a>
+                       th:text="${problem.title}">
+                    </a>
+                    <a  th:if="${session.login_user != null && session.login_user.isAdmin != 0}" th:href="@{/admin/edit?id={id}(id=${problem.problemId})}" >
+                        <i class='far fa-edit'> </i>
+                    </a>
+                </td>
+                <td>
+                    <p
+                       th:text="${problem.category}"></p>
+                </td>
+                <td>
+                    <p
+                            th:text="${problem.difficulty}"></p>
                 </td>
 
 
             </tr>
         </table>
 
-        <div class="modal-footer no-margin-top">
-            <div class="col-md-6">
-                当前第 [[${pageInfo.pageNum}]]页,共 [[${pageInfo.pages}]] 页.一共 [[${pageInfo.total}]] 条记录
-            </div>
-
-            <ul class="pagination pull-right no-margin">
-                <li th:if="${pageInfo.hasPreviousPage}">
-                    <a th:href="'/?page=1'">首页</a>
-                </li>
-
-                <li class="prev" th:if="${pageInfo.hasPreviousPage}">
-                    <a th:href="'/?page='+${pageInfo.prePage}">
-                        <i class="ace-icon fa fa-angle-double-left"></i>
-                    </a>
-                </li>
-                <!--遍历条数-->
+        <div class="center">
+            <div class="pagination">
                 <li th:each="nav:${pageInfo.navigatepageNums}">
-                    <a th:href="'/?page='+${nav}" th:text="${nav}" th:if="${nav != pageInfo.pageNum}"></a>
-                    <span style="font-weight: bold;background: #6faed9;" th:if="${nav == pageInfo.pageNum}" th:text="${nav}" ></span>
+                    <a th:href="'/?page='+${nav}" th:text="${nav}"></a>
+                </li>
+                <li class="pull-right ">
+                    <a th:href="'/?page='+${pageInfo.pages}">Last Page</a>
                 </li>
 
-                <li class="next" th:if="${pageInfo.hasNextPage}">
-                    <a th:href="'/?page='+${pageInfo.nextPage}">
-                        <i class="ace-icon fa fa-angle-double-right"></i>
-                    </a>
-                </li>
 
-                <li>
-                    <a th:href="'/?page='+${pageInfo.pages}">尾页</a>
-                </li>
-            </ul>
+
+            </div>
         </div>
+
 
 
 </section>

@@ -45,8 +45,8 @@
 </script>
 <form th:action="@{/register}" th:object="${obj}" method="post">
 
-  <div class="row mb-3">
-    <label class="col-sm-3 control-label" for="userName">userName</label>
+  <div class="row mb-3 class="mt-3"">
+    <label class="col-sm-3 control-label" for="userName">username</label>
     <div class="col-sm-9">
       <input class="form-control" oninput="javascript:doCheckUsername()"
              type="text" th:field="*{userName}" />

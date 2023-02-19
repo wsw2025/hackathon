@@ -11,4 +11,5 @@ public class UserInfo {
     private String nickName;
     private int isAdmin;
     private int score;
+    private String image;
 }

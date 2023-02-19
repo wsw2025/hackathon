@@ -1,16 +1,33 @@
 <!DOCTYPE html>
 <html th:replace="~{layout::layout(~{::title},~{::section})}">
 <head>
-  <title>Upload</title>
+  <title>Edit</title>
 </head>
 <section class="col-md-4 mx-auto" style="max-width: 800px">
+  <script type="text/javascript" th:inline="javascript">
 
-  <form th:action="@{/admin/upload}" th:object="${ProblemForm}" method="post">
+  function delete() {
+    var problemId = /*[[${session.problem.problemId}]]*/ 'Unknown';
+    var load_url = "/admin/delete";
+
+    $.post(load_url, {problemId: problemId}, function(data) {
+      if (data == "ok") {
+        $("#delete_msg").show();
+
+      } else {
+        $("#delete_msg").hide();
+
+      }
+    });
+  }
+
+</script>
+  <form th:action="@{/admin/edit?id={id}(id=${session.problem.problemId})}" th:object="${ProblemForm}" method="post">
 
     <div class="row mb-3 mt-3">
       <label class="col-sm-3 control-label" for="title">Title:</label>
       <div class="col-sm-9">
-        <input class="form-control" type="text" th:field="*{title}" />
+        <input class="form-control" type="text" th:field="*{title}" th:value="${session.problem.title}"/>
       </div>
       <span class="text-primary" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
     </div>
@@ -18,7 +35,8 @@
     <div class="row mb-3">
       <label class="col-sm-3 control-label" for="problem">Problem:</label>
       <div class="col-sm-9">
-        <input class="form-control" type="text" th:field="*{problem}" />
+        <input class="form-control" type="text" th:field="*{problem}"
+               th:value="${session.problem.problem}"/>
       </div>
       <span class="text-primary" th:if="${#fields.hasErrors('problem')}" th:errors="*{problem}"></span>
     </div>
@@ -26,7 +44,8 @@
     <div class="row mb-3">
       <label class="col-sm-3 control-label" for="category">Category:</label>
       <div class="col-sm-9">
-        <input class="form-control" type="text" th:field="*{category}" />
+        <input class="form-control" type="text" th:field="*{category}"
+               th:value="${session.problem.category}"/>
       </div>
       <span class="text-primary" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></span>
     </div>
@@ -34,7 +53,8 @@
     <div class="row mb-3">
       <label class="col-sm-3 control-label" for="difficulty">Difficulty:</label>
       <div class="col-sm-9">
-        <input class="form-control" type="text" th:field="*{difficulty}" />
+        <input class="form-control" type="text" th:field="*{difficulty}"
+               th:value="${session.problem.difficulty}"/>
       </div>
       <span class="text-primary" th:if="${#fields.hasErrors('difficulty')}" th:errors="*{difficulty}"></span>
     </div>
@@ -42,7 +62,8 @@
     <div class="row mb-3">
       <label class="col-sm-3 control-label" for="input">Input:</label>
       <div class="col-sm-9">
-        <input class="form-control" type="text" th:field="*{input}" />
+        <input class="form-control" type="text" th:field="*{input}"
+               th:value="${session.problem.input}"/>
       </div>
       <span class="text-primary" th:if="${#fields.hasErrors('input')}" th:errors="*{input}"></span>
     </div>
@@ -50,14 +71,26 @@
     <div class="row mb-3">
       <label class="col-sm-3 control-label" for="answer">Answer:</label>
       <div class="col-sm-9">
-        <input class="form-control" type="text" th:field="*{answer}" />
+        <input class="form-control" type="text" th:field="*{answer}"
+               th:value="${session.problem.answer}"/>
       </div>
       <span class="text-primary" th:if="${#fields.hasErrors('answer')}" th:errors="*{answer}"></span>
     </div>
 
     <button type="submit" class="btn btn-primary col-md-4" id="submit">Submit</button>
-    </div>
 
+
+    <h1 th:text="${msg}"></h1>
+
+
+
+
+
+  </form>
+  <form th:action="@{/admin/delete?id={id}(id=${session.problem.problemId})}"  method="post">
+    <button class="btn btn-primary col-md-4" id="delete"   onclick="if(!confirm('del?')){return false;}">Delete</button>
+    <h1 th:text="${del}"></h1>
+    </div>
   </form>
 </section>
 </html>

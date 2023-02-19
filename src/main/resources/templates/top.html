@@ -7,23 +7,29 @@
     <ul class="navbar-nav mx-auto">
         <li><a href="/" class="nav-link px-2" th:text="#{top_home}">Home</a></li>
         <li><a href="/leaderboard" class="nav-link px-2" th:text="#{top_ranking}">Ranking</a></li>
-        <li><a href="#" class="nav-link px-2" th:text="#{top_topic}">Topic</a></li>
-        <li><a href="#" class="nav-link px-2" th:text="#{top_about}">About</a></li>
+        <li><a href="/coding" class="nav-link px-2" th:text="#{top_coding}">Coding</a></li>
+        <li><a href="/about" class="nav-link px-2" th:text="#{top_about}">About</a></li>
         <li th:if="${session.login_user != null && session.login_user.isAdmin != 0}">
             <a href="/admin/upload" class="nav-link px-2" th:text="#{top_upload}">Upload</a>
         </li>
     </ul>
+    <form class="d-flex" action="/" method="post">
+        <input class="form-control me-2 mr-3" type="search" placeholder="Search" id="key" name="key" aria-label="Search">
+        <button class="btn btn-outline-success me-3" type="submit">Search</button>
+    </form>
     <div class="navbar-nav" th:if="${session.login_user == null}">
         <a class="btn btn-outline-primary mx-2" href="/login" th:text="#{top_login}">Login</a>
         <a class="btn btn-outline-primary" href="/register" th:text="#{top_register}">Sign Up</a>
     </div>
+
     <ul class="navbar-nav" th:if="${session.login_user != null}">
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-bs-toggle="dropdown">
+               <img th:src="${session.login_user.image}" width="40" height="40" style="border-radius: 50%; vertical-align:middle;margin:0px 5px">
                 <label th:text="${session.login_user.nickName}"></label>
             </a>
             <div class="dropdown-menu">
-                <a class="dropdown-item" href="/setting" th:text="#{top_Setting}">Setting</a>
+                <a class="dropdown-item" href="/user/setting" th:text="#{top_setting}">Setting</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="/logout" th:text="#{top_logout}">Logout</a>
             </div>
@@ -35,8 +41,8 @@
                 <label th:text="#{top_language}"></label>
             </a>
             <div class="dropdown-menu">
-                <a class="dropdown-item" href="/locale?lang=en_US">English</a>
-                <a class="dropdown-item" href="/locale?lang=zh_CN">中文</a>
+                <a class="dropdown-item" href="/locale?__lang__=en_US">English</a>
+                <a class="dropdown-item" href="/locale?__lang__=zh_CN">中文</a>
             </div>
         </li>
     </ul>

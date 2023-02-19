@@ -20,6 +20,14 @@ public interface UserInfoMapper {
             "where user_name=#{userName}")
     void change(UserInfo user);
 
-    @Select("select user_name, score from user_info order by score desc")
+    @Update("update user_info set password=#{password}, user_name=#{userName}, nick_name=#{nickName}, email=#{email} " +
+            "where user_id=#{userId}")
+    void changeAll(UserInfo user);
+
+    @Update("update user_info set image=#{src} " +
+            "where user_id=#{id}")
+    void updateImage(int id, String src);
+
+    @Select("select user_name, score, image from user_info order by score desc")
     public List<UserInfo> getAllUserInfo();
 }

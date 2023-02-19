@@ -5,7 +5,146 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <script src="/webjars/jquery/3.6.2/jquery.min.js"></script>
     <script src="/webjars/bootstrap/5.2.3/js/bootstrap.bundle.min.js"></script>
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
     <link rel="stylesheet" href="/webjars/bootstrap/5.2.3/css/bootstrap.min.css">
+
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="../extends/font-awesome-4.7.0/css/font-awesome.css">
+    <style type="text/css">
+        @-webkit-keyframes spin {
+            to {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin {
+            to {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+        .div-waiting{
+            position: fixed;
+            z-index: 998;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            opacity: 1;
+            background: rgba(0,0,0,0.2);
+            vertical-align: middle;
+            text-align: center;
+        }
+        .icon-waiting{
+            position: relative;
+            top: 48%;
+            width: 5rem;
+            height: 5rem;
+            margin: 0 auto;
+            border-radius: 50%;
+            border: 0.5rem solid rgba(21, 21, 21, 0.4);
+            border-top-color: #e1e1e1;
+            -webkit-animation: 1.5s spin infinite linear;
+            animation: 1.5s spin infinite linear;
+        }
+        .icon-position{
+            position: relative;
+            top: 48%;
+            margin: 0 auto;
+            font-size: 30px;
+        }
+
+#problems {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#problems td, #problems th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#problems tr:nth-child(even){background-color: #f2f2f2;}
+
+#problems tr:hover {background-color: #ddd;}
+
+table tr td:nth-child(1) {
+  width:100px;
+}
+table tr td:nth-child(2) {
+  width:900px;
+}
+
+table tr td:nth-child(3) {
+  width:100px;
+}
+table tr td:nth-child(4) {
+  width:100px;
+}
+
+#problems th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #99afff;
+  color: white;
+}
+
+a:link {
+      text-decoration: none;
+      colour: black;
+}
+a:hover {
+  color: black;
+  background-color: transparent;
+  text-decoration: underline;
+}
+a:visited {
+  color: black;
+  background-color: transparent;
+  text-decoration: none;
+}
+a:active {
+  color: black;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+.center {
+  text-align: center;
+
+}
+
+.pagination {
+  display: inline-block;
+}
+
+.pagination li {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: background-color .3s;
+  border: 1px solid #ddd;
+  margin: 0 4px;
+}
+
+.pagination a.active {
+  background-color: #4CAF50;
+  color: white;
+  border: 1px solid #4CAF50;
+}
+
+.pagination a:hover:not(.active) {background-color: #ddd;}
+
+
+
+    </style>
+
+
 </head>
 <body>
 <div class="container">

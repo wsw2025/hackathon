@@ -23,6 +23,11 @@ public class ProblemServiceImpl implements ProblemService {
         return problemMapper.getAllProblems();
     }
 
+    public List<Problem> getProblemsByKey(String key) {
+        return problemMapper.getAllProblemsByKey(key);
+    }
+
+
     public void addScore(int id){
         problemMapper.addScoreById(id);
     }

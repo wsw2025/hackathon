@@ -43,7 +43,21 @@ public class UserInfoServiceImpl implements UserInfoService {
         return false;
     }
 
+    public boolean changeAllUserInfo(UserInfo user) {
+        try {
+            userInfoMapper.changeAll(user);
+            return true;
+        } catch (Exception e) {
+            logger.error(e.toString(), e);
+        }
+        return false;
+    }
+
     public List<UserInfo> getAllUserInfo(){
         return userInfoMapper.getAllUserInfo();
+    }
+
+    public void addImg(int id, String scr){
+        userInfoMapper.updateImage(id, scr);
     }
 }

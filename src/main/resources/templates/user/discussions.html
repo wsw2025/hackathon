@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html th:replace="~{layout::layout(~{::title},~{::section})}">
+<head>
+  <title>Discussion</title>
+</head>
+<body>
+
+
+<section class="mb-3">
+
+  <h1 th:text="${problemInfo.title}"></h1>
+
+</section>
+
+<section class="mb-3">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light mb-3">
+
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" th:href="@{'/problems?id=' + ${problemInfo.problemId}}">Task</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{'/user/submit?id=' + ${problemInfo.problemId}}">Submit</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{'/user/submissions?id=' + ${problemInfo.problemId}}">Submissions</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{'/problems/discussions?id=' + ${problemInfo.problemId}}">Discussions</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</section>
+
+
+
+<section>
+  <div class="row">
+    <div class="column">
+      <div class="card">..</div>
+    </div>
+  </div>
+
+
+  <div class="center">
+    <div class="pagination">
+      <li th:each="nav:${submissions.navigatepageNums}">
+        <a th:href="'submissions?page='+${nav} + '&id=' + ${problemInfo.problemId} " th:text="${nav}"></a>
+      </li>
+      <li class="pull-right ">
+        <a th:href="'submissions?page=' + ${submissions.pages} + '&id=' + ${problemInfo.problemId}">Last Page</a>
+      </li>
+
+
+
+    </div>
+  </div>
+
+</section>
+
+</body>
+</html>

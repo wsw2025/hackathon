@@ -6,7 +6,10 @@ import lombok.Data;
 
 public class Problem {
     private int problemId;
-    private String curDate;
+    private String title;
     private String problem;
     private String answer;
+    private String input;
+    private String category;
+    private String difficulty;
 }
