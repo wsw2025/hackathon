@@ -25,8 +25,6 @@ public class BoardController {
         PageHelper.startPage(page, size);//分页
 
         List<UserInfo> users = userinfoService.getAllUserInfo();
-//        Collections.sort(users, new Comparator<UserInfo>() {
-//        });
         PageInfo<UserInfo> pageInfo = new PageInfo<UserInfo>(users, size);
         model.addAttribute("pageInfo", pageInfo);
         return "leaderboard";

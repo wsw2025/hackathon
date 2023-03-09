@@ -6,16 +6,19 @@
     </a>
     <ul class="navbar-nav mx-auto">
         <li><a href="/" class="nav-link px-2" th:text="#{top_home}">Home</a></li>
+        <li><a href="/contests" class="nav-link px-2" th:text="#{top_contest}">Contest</a></li>
         <li><a href="/leaderboard" class="nav-link px-2" th:text="#{top_ranking}">Ranking</a></li>
         <li><a href="/coding" class="nav-link px-2" th:text="#{top_coding}">Coding</a></li>
+        <li><a href="/learn" class="nav-link px-2" th:text="#{top_learn}">Learn</a></li>
         <li><a href="/about" class="nav-link px-2" th:text="#{top_about}">About</a></li>
         <li th:if="${session.login_user != null && session.login_user.isAdmin != 0}">
             <a href="/admin/upload" class="nav-link px-2" th:text="#{top_upload}">Upload</a>
         </li>
     </ul>
     <form class="d-flex" action="/" method="post">
-        <input class="form-control me-2 mr-3" type="search" placeholder="Search" id="key" name="key" aria-label="Search">
-        <button class="btn btn-outline-success me-3" type="submit">Search</button>
+        <input class="form-control me-2 mr-3" type="search" th:placeholder="#{top_search}" id="key" name="key" aria-label="Search">
+        <button class="btn btn-outline-success me-3" type="submit" th:value="#{top_search}"
+        style="text-align: center">Search</button>
     </form>
     <div class="navbar-nav" th:if="${session.login_user == null}">
         <a class="btn btn-outline-primary mx-2" href="/login" th:text="#{top_login}">Login</a>

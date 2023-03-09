@@ -22,7 +22,7 @@
   }
 
 </script>
-  <form th:action="@{/admin/edit?id={id}(id=${session.problem.problemId})}" th:object="${ProblemForm}" method="post">
+  <form th:action="@{/admin/edit}" th:object="${ProblemForm}" method="post">
 
     <div class="row mb-3 mt-3">
       <label class="col-sm-3 control-label" for="title">Title:</label>
@@ -75,6 +75,22 @@
                th:value="${session.problem.answer}"/>
       </div>
       <span class="text-primary" th:if="${#fields.hasErrors('answer')}" th:errors="*{answer}"></span>
+    </div>
+
+    <div class="row mb-3">
+      <label class="col-sm-5 control-label" for="time">Schedule Release:</label>
+      <div class="col-sm-7">
+        <input type="datetime-local" name="time" id="time">
+        <script>
+            let today = new Date();
+            let future = new Date(today.setDate(today.getDate() +50)).toISOString().slice(0, 16);
+            today = new Date().toISOString().slice(0, 16);
+
+            document.getElementsByName("time")[0].min = today;
+            document.getElementsByName("time")[0].max = future;
+
+        </script>
+      </div>
     </div>
 
     <button type="submit" class="btn btn-primary col-md-4" id="submit">Submit</button>

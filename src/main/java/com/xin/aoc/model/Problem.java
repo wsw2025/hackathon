@@ -12,4 +12,6 @@ public class Problem {
     private String input;
     private String category;
     private String difficulty;
+    private String time;
+    private int contestId;
 }

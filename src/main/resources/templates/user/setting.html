@@ -79,7 +79,7 @@ function doCheckCode() {
             <div class="col-sm-9">
                 <input class="form-control" oninput="doCheckUsername()"
                        type="text" th:field="*{userName}" id="userName"
-                       th:value="${session.login_user.userName}"
+                       th:value="${userName}"
                        />
             </div>
             <span id="labUserName" class="text-primary" style="display: none">username already exists</span>
@@ -111,22 +111,13 @@ function doCheckCode() {
             </div>
             <span class="text-primary" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
         </div>
-<!--        <div class="row mb-3">-->
-<!--            <label class="col-sm-3 control-label" for="checkCode">Verification code</label>-->
-<!--            <div class="col-sm-4">-->
-<!--                <input class="form-control" type="text" value="" name="checkCode"/>-->
-<!--            </div>-->
-<!--            <div class="col-sm-5">-->
-<!--                <input type="button" class="btn btn-default" id="btnCheckCode"-->
-<!--                       onclick="javascript:doCheckCode()" value="Get verification code" />-->
-<!--            </div>-->
-<!--        </div>-->
+
 
         <div class="form-group mb-3">
             <button type="submit" class="btn btn-primary col-md-3" id="btnSubmit">Save</button>
         </div>
 
-        <h1 th:text="${msg}"></h1>
+        <h3 th:text="${msg}"></h3>
     </form>
 </section>
 </html>

@@ -1,6 +1,10 @@
 package com.xin.aoc.controller;
 
 import com.xin.aoc.form.UserForm;
+import com.xin.aoc.mapper.ContestMapper;
+import com.xin.aoc.mapper.DiscussionMapper;
+import com.xin.aoc.mapper.LearnMapper;
+import com.xin.aoc.mapper.RecordMapper;
 import com.xin.aoc.model.UserInfo;
 import com.xin.aoc.service.MailService;
 import com.xin.aoc.service.UserInfoService;
@@ -47,6 +51,14 @@ public class UserController {
 
     @Autowired
     private UserInfoService userInfoService;
+    @Autowired
+    private DiscussionMapper discussionMapper;
+    @Autowired
+    private LearnMapper learnMapper;
+    @Autowired
+    private ContestMapper contestMapper;
+    @Autowired
+    private RecordMapper recordMapper;
 
     @RequestMapping("/login")
     public String login(@RequestParam(required=false,value="username") String username,
@@ -145,11 +157,23 @@ public class UserController {
         UserInfo userInfo = userInfoService.getUserInfo(userName);
         UserInfo oldUser = (UserInfo)request.getSession().getAttribute("login_user");
 
-
         if((userInfo != null) && !(oldUser.getUserName().equals(userName))){
             logger.info("exist!");
             System.out.println(userName+""+oldUser.getUserName()+'!');
             System.out.println(userName==oldUser.getUserName());
+            return "exist";
+        }else{
+            return "ok";
+        }
+    }
+
+    @RequestMapping("/check_username_register")
+    @ResponseBody
+    public String checkUserNameR(@RequestParam(value = "userName") String userName, HttpServletRequest request) {
+        UserInfo userInfo = userInfoService.getUserInfo(userName);
+
+        if((userInfo != null)){
+            logger.info("exist!");
             return "exist";
         }else{
             return "ok";
@@ -270,6 +294,11 @@ public class UserController {
             userInfo.setPassword(newUser.getPassword());
             session.setAttribute("login_user", newUser);
             model.addAttribute("msg", "reset success");
+            discussionMapper.updateAll(newUser);
+            learnMapper.updateAll(newUser);
+            contestMapper.updateAll(newUser);
+            recordMapper.updateAll(newUser);
+
         } else {
             model.addAttribute("msg", "reset failed");
         }

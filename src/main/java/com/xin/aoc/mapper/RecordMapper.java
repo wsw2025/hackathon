@@ -5,6 +5,7 @@ import com.xin.aoc.model.UserInfo;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.ArrayList;
 
@@ -20,4 +21,11 @@ public interface RecordMapper {
 
     @Select("SELECT problem_id from records WHERE user_id=#{userId}")
     ArrayList<Integer> findSolved(int user);
+
+    @Select("SELECT problem_id from records WHERE contest_id=#{id}")
+    ArrayList<Integer> findSolvedByContestId(int id);
+
+    @Update("update contest_records set user_name=#{userName}, image=#{image}" +
+            "where user_id=#{userId}")
+    void updateAll(UserInfo user);
 }

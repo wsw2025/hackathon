@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html th:replace="~{layout::layout(~{::title},~{::section})}" xmlns="http://www.w3.org/1999/html">
+<head>
+  <title>Upload</title>
+</head>
+<section class="col-md-6 mx-auto" style="max-width: 800px">
+  <script type="text/javascript" th:inline="javascript">
+
+  function doCheckUsername() {
+    var original = /*[[${username}]]*/ 'Unknown';
+    var load_url = "/check_title";
+    var title = $("#title").val();
+
+    $.post(load_url, {title: title}, function(data) {
+      if (data == "ok") {
+        $("#labUserName").hide();
+        $("#btnSubmit").removeAttr('disabled');
+      } else {
+        $("#labUserName").show();
+        $("#btnSubmit").attr('disabled', true);
+      }
+    });
+  }
+
+$( "#time" ).datepicker({
+    startDate: new Date()
+});
+
+</script>
+  <form th:action="@{/admin/edit_contest?id={id}(id=${contestId})}" th:object="${ContestForm}" method="post">
+
+    <div class="row mt-3 mb-3">
+      <label class="col-sm-3 control-label" for="title"  >Title</label>
+      <div class="col-sm-9">
+        <input class="form-control"
+               type="text" th:field="*{title}" id="title"
+              th:value="${session.contest.title}"
+        />
+      </div>
+      <span class="text-primary" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
+    </div>
+    <div class="row mb-3">
+      <label class="col-sm-3 control-label" for="content">Content:</label>
+      <div class="col-sm-9">
+              <textarea class="form-control" type="text" th:field="*{content}"  th:value="${session.contest.content}">
+                </textarea>
+      </div>
+      <span class="text-primary" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></span>
+    </div>
+
+
+    <div class="row mb-3">
+      <label class="col-sm-5 control-label" for="time">Contest Opens Time:</label>
+      <div class="col-sm-7">
+        <input type="datetime-local" th:field="*{start}" name="time" id="time" th:value="${session.contest.start}">
+        <script>
+            let today = new Date();
+            let future = new Date(today.setDate(today.getDate() +50)).toISOString().slice(0, 16);
+            today = new Date().toISOString().slice(0, 16);
+
+            document.getElementsByName("time")[0].min = today;
+            document.getElementsByName("time")[0].max = future;
+
+        </script>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <label class="col-sm-5 control-label" for="time">Contest Ends Time:</label>
+      <div class="col-sm-7">
+        <input type="datetime-local" th:field="*{stop}" name="time" id="time" th:value="${session.contest.stop}">
+        <script>
+            let today = new Date();
+            let future = new Date(today.setDate(today.getDate() +50)).toISOString().slice(0, 16);
+            today = new Date().toISOString().slice(0, 16);
+
+            document.getElementsByName("time")[0].min = today;
+            document.getElementsByName("time")[0].max = future;
+
+        </script>
+      </div>
+    </div>
+
+
+    <div class="row mb-3">
+      <label class="col-sm-3 control-label" for="duration">Duration:</label>
+      <div class="col-sm-9">
+              <input class="form-control" type="text" th:field="*{duration}"  th:value="${session.contest.duration}"/>
+
+      </div>
+      <span class="text-primary" th:if="${#fields.hasErrors('duration')}" th:errors="*{duration}"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary col-md-4 mb-3" id="submit" onsubmit="validations()">Submit</button>
+
+  </form>
+
+  <h1 th:text="${msg}"></h1>
+
+  <form th:action="@{/admin/delete_contest(id=${contestId})}"  method="post">
+    <button class="btn btn-primary col-md-4" id="delete"   onclick="if(!confirm('del?')){return false;}">Delete</button>
+    <h1 th:text="${del}"></h1>
+    </div>
+  </form>
+</section>
+</html>

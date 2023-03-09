@@ -9,10 +9,10 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Update;
 
 public interface AdminMapper {
-    @Insert("insert into problems (title, problem, answer, in_put, category, difficulty) values (#{title},#{problem},#{answer},#{input},#{category},#{difficulty})")
+    @Insert("insert into problems (title, problem, answer, in_put, category, difficulty, time, contest_id) values (#{title},#{problem},#{answer},#{input},#{category},#{difficulty},#{time},#{contestId})")
     void insert(ProblemForm problem);
 
-    @Update("update problems set title=#{title}, problem=#{problem}, difficulty=#{difficulty}, answer=#{answer}, in_put=#{input}, category=#{category} " +
+    @Update("update problems set title=#{title}, problem=#{problem}, difficulty=#{difficulty}, answer=#{answer}, in_put=#{input}, category=#{category}, time=#{time} " +
             "where problem_id=#{problemId}")
     void changeAll(Problem problem);
 

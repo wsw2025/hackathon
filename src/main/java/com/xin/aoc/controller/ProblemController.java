@@ -54,9 +54,12 @@ public class ProblemController {
 
 
     @GetMapping(value="/problems")
-    public String add(@RequestParam(required=false,value="id") String id, Model model){
-        logger.info(id);
+    public String add(@RequestParam(required=false,value="id") int id, Model model){
         Problem problem = problemService.getProblem(id);
+        if(problem.getContestId()!=0){
+            logger.info("!!contest");
+            return "redirect:/contest?id="+problem.getContestId();
+        }
         model.addAttribute("problemInfo", problem);
         return "problem/problems";
     }
@@ -65,7 +68,7 @@ public class ProblemController {
 
     @GetMapping(value="/user/submit")
     public String sub(
-                         @RequestParam(required=false,value="id") String problemId,
+                         @RequestParam(required=false,value="id") int problemId,
                          @RequestParam(required=false,value="msg") String msg,
                          @RequestParam(required=false,value="result") String result,
                          Model model, HttpServletRequest request,
@@ -73,7 +76,7 @@ public class ProblemController {
         HttpSession session = request.getSession();
         UserInfo user = (UserInfo)request.getSession().getAttribute("login_user");
         logger.info("!!proid"+problemId);
-        String lastSubmission = submissionMapper.getLastSubmission(Integer.parseInt(problemId), user.getUserId());
+        String lastSubmission = submissionMapper.getLastSubmission(problemId, user.getUserId());
         model.addAttribute("lastSubmission", lastSubmission);
         Problem problem = problemService.getProblem(problemId);
         model.addAttribute("problemInfo", problem);
@@ -85,7 +88,7 @@ public class ProblemController {
     @PostMapping(value="/user/submit")
     public String submit(@RequestParam(value="file") MultipartFile file,
                          @RequestParam(required=false,value="code") String word_code,
-                         @RequestParam(required=false,value="id") String id,
+                         @RequestParam(required=false,value="id") int id,
                          Model model, HttpServletRequest request,
                          HttpServletResponse response){
 
@@ -149,8 +152,11 @@ public class ProblemController {
         }else{
            result="Your answer is incorrect, please try again.";
         }
+        model.addAttribute("msg",msg);
+        model.addAttribute("result",result);
+        model.addAttribute("lastSubmission",code);
         submissionService.update(problem.getProblemId(),user.getUserId(), code, time, status, problem.getTitle());
-        return "redirect:/user/submit?id="+problem.getProblemId()+"&msg="+msg+"&result="+result;
+        return "user/submit";
     }
 
 
@@ -160,7 +166,7 @@ public class ProblemController {
                          @RequestParam(required = false,  value = "key") String key,
                          @RequestParam(required = false,  value = "id") int problemId,
                          Model model, HttpServletRequest request) {
-        Problem problem = problemService.getProblem(Integer.toString(problemId));
+        Problem problem = problemService.getProblem(problemId);
         model.addAttribute("problemInfo", problem);
         if (page == null || page <= 0) page = 1;
         int size = 8;
@@ -182,9 +188,10 @@ public class ProblemController {
                          Model model, HttpServletRequest request) {
 
         Submission submission = submissionService.getSubmission(userId,problemId,curDate);
-        logger.info("!!!sumbisiion"+submission.toString());
+        logger.info("!!!sumbisiion"+problemId);
         model.addAttribute("submission", submission);
-
+        Problem problem = problemService.getProblem(problemId);
+        model.addAttribute("problemInfo", problem);
         return "user/code";
     }
 }

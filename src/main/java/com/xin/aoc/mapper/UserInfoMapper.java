@@ -30,4 +30,7 @@ public interface UserInfoMapper {
 
     @Select("select user_name, score, image from user_info order by score desc")
     public List<UserInfo> getAllUserInfo();
+
+    @Select("select nick_name from user_info where user_id=#{userId}")
+    public String getCurNickName(int userId);
 }

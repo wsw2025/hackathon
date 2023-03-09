@@ -28,6 +28,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
+import java.util.Random;
 
 @Controller
 public class CodingController {
@@ -58,10 +59,11 @@ public class CodingController {
         if(input==null) input="0";
         String name="";
         String output="";
+        Random rd = new Random();
         if(user!=null){
             name = "test"+user.getUserId();
         }else{
-            return  "redirect:/login";
+            name = "test"+rd.nextInt();
         }
         output = compilerService.compile(name,code);
         if(output.length() == 0){

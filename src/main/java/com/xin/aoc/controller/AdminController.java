@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,6 +23,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 @Controller
 public class AdminController {
@@ -32,12 +36,18 @@ public class AdminController {
     @Autowired
     private ProblemService problemService;
 
+
+
     @GetMapping(value="/admin/upload")
     public String upload(@ModelAttribute("ProblemForm") ProblemForm problem){
         return "admin/upload";
     }
     @PostMapping(value="/admin/upload")
-    public String add(@ModelAttribute("ProblemForm") @Validated ProblemForm problem, BindingResult rs){
+    public String add(@ModelAttribute("ProblemForm") @Validated ProblemForm problem,
+                      BindingResult rs){
+        if(problem.getTime().isEmpty()){
+            problem.setTime("2023-02-25 03:07:09.530");
+        }
         if (problem.getProblem() != null && problem.getTitle()  != null) {
             if (rs.hasErrors()) {
                 for (ObjectError error : rs.getAllErrors()) {
@@ -49,14 +59,13 @@ public class AdminController {
             adminService.addProblem(problem);
             return "redirect:/";
         }
-
         return "admin/upload";
-
     }
+
 
     @GetMapping("/admin/edit")
     public String edit(@ModelAttribute("ProblemForm") ProblemForm problemForm,
-                       @RequestParam(required=false,value="id") String id,
+                       @RequestParam(required=false,value="id") int id,
                        Model model, HttpServletRequest request) {
 
         HttpSession session = request.getSession();
@@ -70,6 +79,7 @@ public class AdminController {
         problemForm.setCategory(problem.getCategory());
         problemForm.setDifficulty(problem.getDifficulty());
         problemForm.setInput(problem.getInput());
+        problemForm.setTime(problem.getTime());
 
         session.setAttribute("login_user", user);
         session.setAttribute("problem", problem);
@@ -79,7 +89,7 @@ public class AdminController {
 
     @PostMapping("/admin/edit")
     public String handleFileUpload(@ModelAttribute("ProblemForm") ProblemForm problemInfo,
-                                   @RequestParam(required=false,value="id") String id,
+                                   @RequestParam(required=false,value="id") int id,
                                    @Validated UserForm editUser,
                                    HttpServletRequest request,
                                    BindingResult rs,
@@ -87,7 +97,9 @@ public class AdminController {
         if (rs.hasErrors()) {
             return "admin/edit";
         }
-
+        if(problemInfo.getTime().isEmpty()){
+            problemInfo.setTime("2023-02-25 03:07:09.530");
+        }
         UserInfo user = (UserInfo)request.getSession().getAttribute("login_user");
         HttpSession session = request.getSession();
         session.setAttribute("login_user", user);
@@ -96,6 +108,7 @@ public class AdminController {
         model.addAttribute("problemId",id);
         Problem newProblem = new Problem();
 
+
         if (editUser!=null) {
             newProblem.setTitle(problemInfo.getTitle());
             newProblem.setProblem(problemInfo.getProblem());
@@ -103,7 +116,8 @@ public class AdminController {
             newProblem.setCategory(problemInfo.getCategory());
             newProblem.setDifficulty(problemInfo.getDifficulty());
             newProblem.setInput(problemInfo.getInput());
-            newProblem.setProblemId(Integer. parseInt(id));
+            newProblem.setProblemId(id);
+            newProblem.setTime(problemInfo.getTime());
         }
         logger.info("newuser "+newProblem.getInput());
         if (adminService.changeAllProblemInfo(newProblem)) {
@@ -112,6 +126,7 @@ public class AdminController {
             problemInfo.setAnswer(newProblem.getAnswer());
             problemInfo.setCategory(newProblem.getCategory());
             problemInfo.setDifficulty(newProblem.getDifficulty());
+            problemInfo.setTime(newProblem.getTime());
             session.setAttribute("problem", newProblem);
             model.addAttribute("msg", "reset success");
         } else {
@@ -122,6 +137,19 @@ public class AdminController {
     }
 
 
+
+    @RequestMapping("/check_title")
+    @ResponseBody
+    public String checkUserNameR(@RequestParam(value = "title") String title, HttpServletRequest request) {
+        logger.info(title+"!!title");
+        Problem problem = problemService.getProblemByName(title);
+        if((problem != null)){
+            logger.info("exist!");
+            return "exist";
+        }else{
+            return "ok";
+        }
+    }
     @PostMapping("/admin/delete")
     public String del(@RequestParam(value = "id") int problemId, HttpServletRequest request, Model model) {
 
