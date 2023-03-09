@@ -56,11 +56,11 @@ div.center {text-align: center;}
             if(parseInt(timeLeft.innerHTML) == -1){
                 $("#start").removeAttr('disabled');
                 $("#time").hide();
-                $("#problems").removeAttr('disabled');
+               $("#problems").hide();
 
             }
             else if(totalSeconds<=0){
-                 $("#problems").attr('disabled', true);
+                 $("#problems").show();
                 $("#start").attr('disabled', true);
                 $("#time").show();
                  document.getElementById('h').innerHTML = 0;
@@ -71,7 +71,7 @@ div.center {text-align: center;}
                 return;
             }else{
             $("#start").attr('disabled', true);
-            $("#problems").attr('disabled', true);
+            $("#problems").show();
             $("#time").show();
             var hours = Math.floor(totalSeconds / 3600);
             var minutes = Math.floor((totalSeconds % 3600) / 60);
@@ -105,11 +105,11 @@ div.center {text-align: center;}
 
     <div class="mt-3" th:if="${session.login_user != null}">
         <form th:action="@{'/user/start_contest?'+'id='+${contestId}}" method="post">
-            <button id="start" type="submit" class="btn btn-primary mb-3" >Start</button>
+            <button id="start" type="submit" class="btn btn-primary mb-3" disabled>Start</button>
         </form>
     </div>
 
-    <table  th:if="${session.login_user != null && session.started==true}"
+    <table
             class="mt-3 table table-condensed" id = "problems">
         <tr>
             <th>Status</th>

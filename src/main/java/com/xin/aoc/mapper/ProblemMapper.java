@@ -33,6 +33,6 @@ public interface ProblemMapper {
            )
     List<Problem> getAllProblemsByKey(String key);
 
-    @Select("select * from problems where contest_id=#{id} and time < CURRENT_TIMESTAMP()")
+    @Select("select * from problems where contest_id=#{id}")
     List<Problem>  getProblemsByContest(int id);
 }

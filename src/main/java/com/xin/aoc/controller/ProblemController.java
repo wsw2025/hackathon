@@ -56,9 +56,10 @@ public class ProblemController {
     @GetMapping(value="/problems")
     public String add(@RequestParam(required=false,value="id") int id, Model model){
         Problem problem = problemService.getProblem(id);
-        if(problem.getContestId()!=0){
+
+        if(problem==null){
             logger.info("!!contest");
-            return "redirect:/contest?id="+problem.getContestId();
+            return "redirect:/";
         }
         model.addAttribute("problemInfo", problem);
         return "problem/problems";
