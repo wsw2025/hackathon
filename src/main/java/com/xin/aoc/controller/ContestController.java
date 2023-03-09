@@ -31,6 +31,7 @@ import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
@@ -54,6 +55,8 @@ public class ContestController {
     private CompilerService compilerService;
     @Autowired
     private RecordService recordService;
+    @Autowired
+    private ProblemMapper problemMapper;
 
     private static SimpleDateFormat sDateTimeFormat = null;
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -261,10 +264,10 @@ public class ContestController {
                       @RequestParam(required=false,value="contestId") int contestId,Model model,HttpServletRequest request){
         HttpSession session = request.getSession();
         UserInfo user = (UserInfo)request.getSession().getAttribute("login_user");
-        if(contestMapper.hasStarted(user.getUserId(),contestId)!=1) {
+        if(user==null || contestMapper.hasStarted(user.getUserId(),contestId)!=1) {
             return "redirect:/contest?id="+contestId;
         }
-            Problem problem = problemService.getProblem(id);
+            Problem problem = problemMapper.getProblemByIdAndContest(id);
         if(problem.getContestId()==0){
             logger.info("!!contest");
             return "redirect:/";
@@ -286,22 +289,23 @@ public class ContestController {
         HttpSession session = request.getSession();
         UserInfo user = (UserInfo)request.getSession().getAttribute("login_user");
 
-        if(contestMapper.hasStarted(user.getUserId(),contestId)!=1) {
+        if(user==null || contestMapper.hasStarted(user.getUserId(),contestId)!=1) {
             return "redirect:/contest?id="+contestId;
         }
+
+        Calendar calendar = Calendar.getInstance();
         sDateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         if(contestMapper.getStop(user.getUserId(),contestId)<System.currentTimeMillis()
-        ||sDateTimeFormat.toString().compareTo(contestMapper.getContestStop(contestId))>0) {
-                logger.info(contestMapper.getStop(user.getUserId(),contestId)+" "+System.currentTimeMillis());
+        ||sDateTimeFormat.format(calendar.getTime()).compareTo(contestMapper.getContestStop(contestId))>0) {
+            logger.info(sDateTimeFormat.toString()+" "+contestMapper.getContestStop(contestId));
             return "redirect:/contest?id="+contestId;
         }
 
         logger.info("!!proid"+problemId);
         String lastSubmission = submissionMapper.getLastSubmission(problemId, user.getUserId());
         model.addAttribute("lastSubmission", lastSubmission);
-        Problem problem = problemService.getProblem(problemId);
-
+        Problem problem = problemMapper.getProblemByIdAndContest(problemId);
         model.addAttribute("problemInfo", problem);
         model.addAttribute("result", result);
         model.addAttribute("msg", msg);
@@ -319,11 +323,11 @@ public class ContestController {
                          Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         UserInfo user = (UserInfo)request.getSession().getAttribute("login_user");
-        if(contestMapper.hasStarted(user.getUserId(),contestId)!=1) {
+        if(user==null || contestMapper.hasStarted(user.getUserId(),contestId)!=1) {
             return "redirect:/contest?id="+contestId;
         }
 
-        Problem problem = problemService.getProblem(problemId);
+        Problem problem = problemMapper.getProblemByIdAndContest(problemId);
         model.addAttribute("problemInfo", problem);
         if (page == null || page <= 0) page = 1;
         int size = 8;
@@ -346,11 +350,11 @@ public class ContestController {
 
         HttpSession session = request.getSession();
         UserInfo user = (UserInfo)request.getSession().getAttribute("login_user");
-        if(contestMapper.hasStarted(user.getUserId(),contestId)!=1) {
+        if(user==null || contestMapper.hasStarted(user.getUserId(),contestId)!=1) {
             return "redirect:/contest?id="+contestId;
         }
 
-        Problem problem = problemService.getProblem(id);
+        Problem problem = problemMapper.getProblemByIdAndContest(id);
         model.addAttribute("problemInfo", problem);
         model.addAttribute("contestId",contestId);
 
@@ -431,7 +435,7 @@ public class ContestController {
         Submission submission = submissionService.getSubmission(userId,problemId,curDate);
         logger.info("!!!sumbisiion"+problemId);
         model.addAttribute("submission", submission);
-        Problem problem = problemService.getProblem(problemId);
+        Problem problem = problemMapper.getProblemByIdAndContest(problemId);
         model.addAttribute("problemInfo", problem);
         model.addAttribute("contestId",contestId);
 

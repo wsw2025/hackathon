@@ -13,6 +13,11 @@ public interface ProblemMapper {
     @Select("select * from problems where problem_id=#{id} and time < CURRENT_TIMESTAMP()")
     Problem getProblemById(int id);
 
+    @Select("select * from problems where problem_id=#{id}")
+    Problem getProblemByIdAndContest(int id);
+
+
+
     @Select("select * from problems where title=#{name}")
     Problem getProblemByName(String name);
 
