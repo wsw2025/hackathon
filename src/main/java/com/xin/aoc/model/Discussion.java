@@ -9,7 +9,7 @@ public class Discussion {
     private int userId;
     private String nickName;
     private String image;
-    private int problemId;
+    private int campId;
     private String content;
     private int status;
 }

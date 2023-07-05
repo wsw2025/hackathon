@@ -7,6 +7,9 @@
 
     <section>
         <style>
+.padded-tag {
+  padding: 5px; /* set your desired padding value */
+}
 ul.pagination {
     display: inline-block;
     padding: 0;
@@ -34,43 +37,43 @@ ul.pagination li a:hover:not(.active) {background-color: #ddd;}
 
 div.center {text-align: center;}
 </style>
-       <h1 th:text="Challenges"></h1>
-        <table class="table table-condensed" id = "problems">
-            <tr>
-                <th>Status</th>
-                <th>Problem</th>
-                <th>Category</th>
-                <th>Difficulty</th>
+       <h1 th:text="Home"></h1>
 
-            </tr>
-            <tr th:each="problem : ${pageInfo.list}">
-                <td>
-                    <div th:each="status : ${statusInfo}">
-                        <p  style="color:green" th:if="${status==problem.problemId}">
-                        Solved <span>&#10003;</span> </p>
+
+        <div th:if="${pageInfo}!=null" th:each="camp : ${pageInfo.list}">
+            <div class="row mb-3">
+                <div>
+                    <div class="card" style=" position: relative;">
+                        <div class="card-header">
+<!--                            <img th:src="${camp.image}" width="20" height="20" style="border-radius: 50%; vertical-align:middle;margin:0px 5px">-->
+<!--                            <div th:text="${camp.nickName}" style="display: inline-block;"></div>-->
+                        </div>
+
+                        <div class="card-body" style="display: flex; flex-direction: column;">
+                            <div style="display: flex; margin-top: 2px;">
+                                <h3  class="mb-3"><a th:href="@{'/camp?id=' + ${camp.campId}}" th:text="${camp.title}"></a></h3>
+                                <div  style="margin-left:10px">
+                                    <a  th:if="${session.login_user != null && session.login_user.isAdmin != 0}" th:href="@{/}" >
+                                        <img src="/edit.png" width="24" height="24">
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div  style="display: flex; margin-top: 2px;">
+                                <span th:text="${camp.category}" class="mt-1 w-tag w3-green padded-tag"></span>
+                            </div>
+
+                            <div style="display: flex; margin-top: 10px;">
+                                <div style="display: inline-block; white-space: pre-line; color:grey;">Upload Time:</div>
+                                <div th:text="${camp.curDate}" style="display: inline-block; color:grey;"></div>
+                            </div>
+
+                        </div>
+
                     </div>
-                </td>
-                <td>
-
-                    <a th:href="@{/problems?id={id}(id=${problem.problemId})}"
-                       th:text="${problem.title}">
-                    </a>
-                    <a  th:if="${session.login_user != null && session.login_user.isAdmin != 0}" th:href="@{/admin/edit?id={id}(id=${problem.problemId})}" >
-                        <img src="/edit.png" width="16" height="16">
-                    </a>
-                </td>
-                <td>
-                    <p
-                       th:text="${problem.category}"></p>
-                </td>
-                <td>
-                    <p
-                            th:text="${problem.difficulty}"></p>
-                </td>
-
-
-            </tr>
-        </table>
+                </div>
+            </div>
+        </div>
 
         <div class="center">
             <div class="pagination">
@@ -80,9 +83,6 @@ div.center {text-align: center;}
                 <li class="pull-right ">
                     <a th:href="'/?page='+${pageInfo.pages}">Last Page</a>
                 </li>
-
-
-
             </div>
         </div>
 

@@ -2,8 +2,10 @@ package com.xin.aoc.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.xin.aoc.mapper.CampMapper;
 import com.xin.aoc.mapper.DiscussionMapper;
 import com.xin.aoc.mapper.ProblemMapper;
+import com.xin.aoc.model.Camp;
 import com.xin.aoc.model.Discussion;
 import com.xin.aoc.model.Problem;
 import com.xin.aoc.model.UserInfo;
@@ -32,8 +34,10 @@ public class DiscussionController {
     @Autowired
     ProblemService problemService;
     private Logger logger = LoggerFactory.getLogger(getClass());
+    @Autowired
+    private CampMapper campMapper;
 
-    @GetMapping(value="/problems/discussions")
+    @GetMapping(value="/camp/discussions")
     public String discuss(
             @RequestParam(required=false,value="id") int id,
             Model model, HttpServletRequest request,
@@ -42,19 +46,15 @@ public class DiscussionController {
         int size = 8;
         PageHelper.startPage(page, size);
 
-        Problem problem = problemService.getProblem(id);
+        Camp camp = campMapper.getCampById(id);
         UserInfo user = (UserInfo)request.getSession().getAttribute("login_user");
-        model.addAttribute("problemInfo", problem);
+        model.addAttribute("campInfo", camp);
 
         HttpSession session = request.getSession();
         session.setAttribute("login_user", user);
 
-        List<Discussion> discussions = discussionMapper.getDiscussionById(problem.getProblemId());
-//        for (Discussion e : discussions) {
-//            String curNickName = problemService.getCurNickName(e.getUserId());
-//            e.setNickName(curNickName);
-//            discussionMapper.updateNickName(curNickName,e.getUserId());
-//        }
+        List<Discussion> discussions = discussionMapper.getDiscussionById(camp.getCampId());
+
 
         PageInfo<Discussion> pageInfo = new PageInfo<Discussion>(discussions, size);
         model.addAttribute("pageInfo", pageInfo);
@@ -63,9 +63,9 @@ public class DiscussionController {
     }
 
 
-    @PostMapping(value="/problems/discussions")
+    @PostMapping(value="/camp/discussions")
     public String post(
-            @RequestParam(required=false,value="id",defaultValue="1") int problemId,
+            @RequestParam(required=false,value="id",defaultValue="1") int campId,
             @RequestParam(required=false,value="content") String content,
             Model model, HttpServletRequest request,
             @RequestParam(required = false, defaultValue = "1", value = "page") Integer page){
@@ -74,9 +74,9 @@ public class DiscussionController {
         PageHelper.startPage(page, size);
 
 
-        Problem problem = problemService.getProblem(problemId);
+        Camp camp = campMapper.getCampById(campId);
         UserInfo user = (UserInfo)request.getSession().getAttribute("login_user");
-        model.addAttribute("problemInfo", problem);
+        model.addAttribute("problemInfo", camp);
 
         HttpSession session = request.getSession();
         session.setAttribute("login_user", user);
@@ -87,28 +87,28 @@ public class DiscussionController {
         discussion.setUserId(user.getUserId());
         discussion.setNickName(user.getNickName());
         discussion.setImage(user.getImage());
-        discussion.setProblemId(problem.getProblemId());
+        discussion.setCampId(camp.getCampId());
         discussion.setContent(content);
         discussionMapper.addDiscussion(discussion);
-        return "redirect:/problems/discussions?id="+problem.getProblemId();
+        return "redirect:/camp/discussions?id="+camp.getCampId();
     }
 
-    @RequestMapping(value="/problems/discussions/del")
-    public String post( @RequestParam(required=false,value="id") String problemId,
+    @RequestMapping(value="/camp/discussions/del")
+    public String post( @RequestParam(required=false,value="id") int campId,
                         @RequestParam(required=false,value="cur_date") String curDate,
-                        @RequestParam(required=false,value="user_id") String userId,
+                        @RequestParam(required=false,value="user_id") int userId,
                         HttpServletRequest request,
                         Model model
                         ){
 
-        Problem problem = problemService.getProblem(Integer.parseInt(problemId));
+        Camp camp = campMapper.getCampById(campId);
         UserInfo user = (UserInfo)request.getSession().getAttribute("login_user");
-        model.addAttribute("problemInfo", problem);
+        model.addAttribute("campInfo", camp);
 
         HttpSession session = request.getSession();
         session.setAttribute("login_user", user);
-        discussionMapper.delDiscussion(problemId,  userId,  curDate);
+        discussionMapper.delDiscussion(campId,  userId,  curDate);
 
-        return "redirect:/problems/discussions?id="+problem.getProblemId();
+        return "redirect:/problems/discussions?id="+camp.getCampId();
     }
 }

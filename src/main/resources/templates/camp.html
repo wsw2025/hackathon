@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html th:replace="~{layout::layout(~{::title},~{::section})}">
+<head>
+  <title>Camp</title>
+</head>
+<body>
+
+
+<section class="mb-3">
+  <h1 th:text="${campInfo.title}"></h1>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light mb-3">
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" th:href="@{'/camp?id=' + ${campInfo.campId}}">Info</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{'/camp/discussions?id=' + ${campInfo.campId}}">Discussions</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div th:text="${campInfo.content}" style="white-space: pre-line;"> </div>
+
+
+</section>
+
+
+
+
+
+</body>
+</html>
