@@ -8,9 +8,9 @@ spring:
 
   datasource:
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:file:./aoc
-    username: aoc
-    password: aoc
+    url: jdbc:h2:file:./scamx
+    username: scamx
+    password: scamx
 
   sql:
     init:
