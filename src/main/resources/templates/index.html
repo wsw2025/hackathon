@@ -54,7 +54,7 @@ div.center {text-align: center;}
                             <div style="display: flex; margin-top: 2px;">
                                 <h3  class="mb-3"><a th:href="@{'/camp?id=' + ${camp.campId}}" th:text="${camp.title}"></a></h3>
                                 <div  style="margin-left:10px">
-                                    <a  th:if="${session.login_user != null && session.login_user.isAdmin != 0}" th:href="@{/}" >
+                                    <a  th:if="${session.login_user != null && session.login_user.isAdmin != 0}" th:href="@{'/admin/edit?id=' + ${camp.campId}}" >
                                         <img src="/edit.png" width="24" height="24">
                                     </a>
                                 </div>
@@ -64,8 +64,20 @@ div.center {text-align: center;}
                                 <span th:text="${camp.category}" class="mt-1 w-tag w3-green padded-tag"></span>
                             </div>
 
+
                             <div style="display: flex; margin-top: 10px;">
-                                <div style="display: inline-block; white-space: pre-line; color:grey;">Upload Time:</div>
+                                <div style="display: inline-block; white-space: pre-line; color:grey;">Rating:</div>
+
+
+                                    <div th:if="${camp.rating}!=0" th:each="i : ${#numbers.sequence(1, camp.rating)}">
+                                        <span  style="color: orange;">&#9733;</span>
+                                    </div>
+
+                                    <div  th:if="${camp.rating}!=10" th:each="i : ${#numbers.sequence(1, camp.unrating)}">
+                                        <span style="color: grey;">&#9734;</span>
+                                    </div>
+
+                                <div style="display: inline-block; white-space: pre-line; color:grey;  margin-left: 10px;">&nbsp;Upload Time:</div>
                                 <div th:text="${camp.curDate}" style="display: inline-block; color:grey;"></div>
                             </div>
 

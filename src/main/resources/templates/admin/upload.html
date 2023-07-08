@@ -27,9 +27,9 @@ $( "#time" ).datepicker({
 });
 
 </script>
-  <form th:action="@{/admin/upload}" th:object="${ProblemForm}" method="post">
+  <form th:action="@{/admin/upload}" th:object="${CampForm}" method="post">
     <div class="row mt-3 mb-3">
-      <label class="col-sm-3 control-label" for="title"  >Title</label>
+      <label class="col-sm-3 control-label" for="title">Title</label>
       <div class="col-sm-9">
         <input class="form-control" oninput="doCheckUsername()"
                type="text" th:field="*{title}" id="title"
@@ -41,11 +41,11 @@ $( "#time" ).datepicker({
     </div>
 
     <div class="row mb-3">
-      <label class="col-sm-3 control-label" for="problem">Problem:</label>
+      <label class="col-sm-3 control-label" for="content">Content:</label>
       <div class="col-sm-9">
-        <textarea style="height:200px" class="form-control" type="text" th:field="*{problem}"> </textarea>
+        <textarea style="height:200px" class="form-control" type="text" th:field="*{content}"> </textarea>
       </div>
-      <span class="text-primary" th:if="${#fields.hasErrors('problem')}" th:errors="*{problem}"></span>
+      <span class="text-primary" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></span>
     </div>
 
     <div class="row mb-3">
@@ -57,45 +57,30 @@ $( "#time" ).datepicker({
     </div>
 
     <div class="row mb-3">
-      <label class="col-sm-3 control-label" for="difficulty">Difficulty:</label>
+      <label class="col-sm-3 control-label" for="contact">Contact:</label>
       <div class="col-sm-9">
-        <input class="form-control" type="text" th:field="*{difficulty}" />
+        <input class="form-control" type="text" th:field="*{contact}" />
       </div>
-      <span class="text-primary" th:if="${#fields.hasErrors('difficulty')}" th:errors="*{difficulty}"></span>
+      <span class="text-primary" th:if="${#fields.hasErrors('contact')}" th:errors="*{contact}"></span>
     </div>
 
     <div class="row mb-3">
-      <label class="col-sm-3 control-label" for="input">Input:</label>
+      <label class="col-sm-3 control-label" for="input">Location:</label>
       <div class="col-sm-9">
-        <input class="form-control" type="text" th:field="*{input}" />
+        <input class="form-control" type="text" th:field="*{location}" />
       </div>
-      <span class="text-primary" th:if="${#fields.hasErrors('input')}" th:errors="*{input}"></span>
+      <span class="text-primary" th:if="${#fields.hasErrors('location')}" th:errors="*{location}"></span>
     </div>
 
     <div class="row mb-3">
-      <label class="col-sm-3 control-label" for="answer">Answer:</label>
+      <label class="col-sm-3 control-label" for="answer">Dates:</label>
       <div class="col-sm-9">
-        <input class="form-control" type="text" th:field="*{answer}" />
+        <input class="form-control" type="text" th:field="*{campDate}" />
       </div>
-      <span class="text-primary" th:if="${#fields.hasErrors('answer')}" th:errors="*{answer}"></span>
+      <span class="text-primary" th:if="${#fields.hasErrors('campDate')}" th:errors="*{campDate}"></span>
 
     </div>
 
-    <div class="row mb-3">
-      <label class="col-sm-5 control-label" for="time">Schedule Release:</label>
-      <div class="col-sm-7">
-        <input type="datetime-local" name="time" id="time">
-        <script>
-            let today = new Date();
-            let future = new Date(today.setDate(today.getDate() +50)).toISOString().slice(0, 16);
-            today = new Date().toISOString().slice(0, 16);
-
-            document.getElementsByName("time")[0].min = today;
-            document.getElementsByName("time")[0].max = future;
-
-        </script>
-      </div>
-    </div>
 
     <button type="submit" class="btn btn-primary col-md-4 mb-3" id="submit" onsubmit="validations()">Submit</button>
 

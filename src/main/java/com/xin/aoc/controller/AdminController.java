@@ -1,7 +1,10 @@
 package com.xin.aoc.controller;
 
+import com.xin.aoc.form.CampForm;
 import com.xin.aoc.form.ProblemForm;
 import com.xin.aoc.form.UserForm;
+import com.xin.aoc.mapper.CampMapper;
+import com.xin.aoc.model.Camp;
 import com.xin.aoc.model.Problem;
 import com.xin.aoc.model.UserInfo;
 import com.xin.aoc.service.AdminService;
@@ -35,20 +38,20 @@ public class AdminController {
     private AdminService adminService;
     @Autowired
     private ProblemService problemService;
+    @Autowired
+    private CampMapper campMapper;
 
 
 
     @GetMapping(value="/admin/upload")
-    public String upload(@ModelAttribute("ProblemForm") ProblemForm problem){
+    public String upload(@ModelAttribute("CampForm") CampForm camp){
         return "admin/upload";
     }
     @PostMapping(value="/admin/upload")
-    public String add(@ModelAttribute("ProblemForm") @Validated ProblemForm problem,
+    public String add(@ModelAttribute("CampForm") @Validated CampForm camp,
                       BindingResult rs){
-        if(problem.getTime().isEmpty()){
-            problem.setTime("2023-02-25 03:07:09.530");
-        }
-        if (problem.getProblem() != null && problem.getTitle()  != null) {
+
+        if (camp.getContent() != null && camp.getTitle()  != null) {
             if (rs.hasErrors()) {
                 for (ObjectError error : rs.getAllErrors()) {
                     System.out.println(error.getDefaultMessage());
@@ -56,7 +59,7 @@ public class AdminController {
                 return "admin/upload";
             }
 
-            adminService.addProblem(problem);
+            campMapper.addCamp(camp);
             return "redirect:/";
         }
         return "admin/upload";
@@ -64,31 +67,30 @@ public class AdminController {
 
 
     @GetMapping("/admin/edit")
-    public String edit(@ModelAttribute("ProblemForm") ProblemForm problemForm,
+    public String edit(@ModelAttribute("CampForm") CampForm campForm,
                        @RequestParam(required=false,value="id") int id,
                        Model model, HttpServletRequest request) {
 
         HttpSession session = request.getSession();
         UserInfo user = (UserInfo)request.getSession().getAttribute("login_user");
 
-        Problem problem = problemService.getProblem(id);
+        Camp camp = campMapper.getCampById(id);
 
-        problemForm.setTitle(problem.getTitle());
-        problemForm.setProblem(problem.getProblem());
-        problemForm.setAnswer(problem.getAnswer());
-        problemForm.setCategory(problem.getCategory());
-        problemForm.setDifficulty(problem.getDifficulty());
-        problemForm.setInput(problem.getInput());
-        problemForm.setTime(problem.getTime());
+        campForm.setTitle(camp.getTitle());
+        campForm.setContent(camp.getContent());
+        campForm.setCategory(camp.getCategory());
+        campForm.setLocation(camp.getLocation());
+        campForm.setCampDate(camp.getContact());
+        campForm.setContact(camp.getCategory());
 
         session.setAttribute("login_user", user);
-        session.setAttribute("problem", problem);
+        session.setAttribute("camp", camp);
 
         return "admin/edit";
     }
 
     @PostMapping("/admin/edit")
-    public String handleFileUpload(@ModelAttribute("ProblemForm") ProblemForm problemInfo,
+    public String post_edit(@ModelAttribute("CampForm") CampForm campForm,
                                    @RequestParam(required=false,value="id") int id,
                                    @Validated UserForm editUser,
                                    HttpServletRequest request,
@@ -97,37 +99,30 @@ public class AdminController {
         if (rs.hasErrors()) {
             return "admin/edit";
         }
-        if(problemInfo.getTime().isEmpty()){
-            problemInfo.setTime("2023-02-25 03:07:09.530");
-        }
+
         UserInfo user = (UserInfo)request.getSession().getAttribute("login_user");
         HttpSession session = request.getSession();
         session.setAttribute("login_user", user);
-
-        Problem problem = problemService.getProblem(id);
-        model.addAttribute("problemId",id);
-        Problem newProblem = new Problem();
-
+        model.addAttribute("campId",id);
+        Camp camp = new Camp();
 
         if (editUser!=null) {
-            newProblem.setTitle(problemInfo.getTitle());
-            newProblem.setProblem(problemInfo.getProblem());
-            newProblem.setAnswer(problemInfo.getAnswer());
-            newProblem.setCategory(problemInfo.getCategory());
-            newProblem.setDifficulty(problemInfo.getDifficulty());
-            newProblem.setInput(problemInfo.getInput());
-            newProblem.setProblemId(id);
-            newProblem.setTime(problemInfo.getTime());
+            camp.setTitle(campForm.getTitle());
+            camp.setContact(campForm.getContact());
+            camp.setContent(campForm.getContent());
+            camp.setCategory(campForm.getCategory());
+            camp.setLocation(campForm.getLocation());
+            camp.setCampDate(campForm.getCampDate());
+            camp.setCampId(id);
         }
-        logger.info("newuser "+newProblem.getInput());
-        if (adminService.changeAllProblemInfo(newProblem)) {
-            problemInfo.setTitle(newProblem.getTitle());
-            problemInfo.setProblem(newProblem.getProblem());
-            problemInfo.setAnswer(newProblem.getAnswer());
-            problemInfo.setCategory(newProblem.getCategory());
-            problemInfo.setDifficulty(newProblem.getDifficulty());
-            problemInfo.setTime(newProblem.getTime());
-            session.setAttribute("problem", newProblem);
+        if (campMapper.editCamp(camp)) {
+            campForm.setTitle(camp.getTitle());
+            campForm.setContact(campForm.getContact());
+            campForm.setContent(campForm.getContent());
+            campForm.setCategory(campForm.getCategory());
+            campForm.setLocation(campForm.getLocation());
+            campForm.setCampDate(campForm.getCampDate());
+            session.setAttribute("camp", camp);
             model.addAttribute("msg", "reset success");
         } else {
             model.addAttribute("msg", "reset failed");
@@ -142,8 +137,8 @@ public class AdminController {
     @ResponseBody
     public String checkUserNameR(@RequestParam(value = "title") String title, HttpServletRequest request) {
         logger.info(title+"!!title");
-        Problem problem = problemService.getProblemByName(title);
-        if((problem != null)){
+        Camp camp = campMapper.getCampsByTitle(title);
+        if((camp != null)){
             logger.info("exist!");
             return "exist";
         }else{
@@ -151,9 +146,9 @@ public class AdminController {
         }
     }
     @PostMapping("/admin/delete")
-    public String del(@RequestParam(value = "id") int problemId, HttpServletRequest request, Model model) {
+    public String del(@RequestParam(value = "id") int id, HttpServletRequest request, Model model) {
 
-        if(adminService.delById(problemId)){
+        if(campMapper.delById(id)){
             logger.info("success!");
             model.addAttribute("del", "delete successful");
 

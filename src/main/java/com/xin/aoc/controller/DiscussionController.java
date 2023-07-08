@@ -47,6 +47,7 @@ public class DiscussionController {
         PageHelper.startPage(page, size);
 
         Camp camp = campMapper.getCampById(id);
+
         UserInfo user = (UserInfo)request.getSession().getAttribute("login_user");
         model.addAttribute("campInfo", camp);
 
@@ -75,6 +76,7 @@ public class DiscussionController {
 
 
         Camp camp = campMapper.getCampById(campId);
+
         UserInfo user = (UserInfo)request.getSession().getAttribute("login_user");
         model.addAttribute("problemInfo", camp);
 
@@ -102,6 +104,7 @@ public class DiscussionController {
                         ){
 
         Camp camp = campMapper.getCampById(campId);
+
         UserInfo user = (UserInfo)request.getSession().getAttribute("login_user");
         model.addAttribute("campInfo", camp);
 

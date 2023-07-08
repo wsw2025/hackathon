@@ -7,104 +7,87 @@
   <script type="text/javascript" th:inline="javascript">
 
   function delete() {
-    var problemId = /*[[${session.problem.problemId}]]*/ 'Unknown';
+    var campId = /*[[${session.camp.campId}]]*/ 'Unknown';
     var load_url = "/admin/delete";
 
-    $.post(load_url, {problemId: problemId}, function(data) {
+    $.post(load_url, {campId: campId}, function(data) {
       if (data == "ok") {
         $("#delete_msg").show();
 
       } else {
         $("#delete_msg").hide();
-
       }
     });
   }
 
 </script>
-  <form th:action="@{/admin/edit}" th:object="${ProblemForm}" method="post">
+
+  <form th:action="@{'/admin/edit?id=' + ${session.camp.campId}}" th:object="${CampForm}" method="post">
 
     <div class="row mb-3 mt-3">
       <label class="col-sm-3 control-label" for="title">Title:</label>
       <div class="col-sm-9">
-        <input class="form-control" type="text" th:field="*{title}" th:value="${session.problem.title}"/>
+        <input class="form-control" type="text" th:field="*{title}" th:value="${session.camp.title}"/>
       </div>
       <span class="text-primary" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
     </div>
 
     <div class="row mb-3">
-      <label class="col-sm-3 control-label" for="problem">Problem:</label>
+      <label class="col-sm-3 control-label" for="content">Content:</label>
       <div class="col-sm-9">
-        <input class="form-control" type="text" th:field="*{problem}"
-               th:value="${session.problem.problem}"/>
+        <input class="form-control" type="text" th:field="*{content}"
+               th:value="${session.camp.content}"/>
       </div>
-      <span class="text-primary" th:if="${#fields.hasErrors('problem')}" th:errors="*{problem}"></span>
+      <span class="text-primary" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></span>
     </div>
 
     <div class="row mb-3">
       <label class="col-sm-3 control-label" for="category">Category:</label>
       <div class="col-sm-9">
         <input class="form-control" type="text" th:field="*{category}"
-               th:value="${session.problem.category}"/>
+               th:value="${session.camp.category}"/>
       </div>
       <span class="text-primary" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></span>
     </div>
 
     <div class="row mb-3">
-      <label class="col-sm-3 control-label" for="difficulty">Difficulty:</label>
+      <label class="col-sm-3 control-label" for="contact">Contact:</label>
       <div class="col-sm-9">
-        <input class="form-control" type="text" th:field="*{difficulty}"
-               th:value="${session.problem.difficulty}"/>
+        <input class="form-control" type="text" th:field="*{contact}"
+               th:value="${session.camp.contact}"/>
       </div>
-      <span class="text-primary" th:if="${#fields.hasErrors('difficulty')}" th:errors="*{difficulty}"></span>
+      <span class="text-primary" th:if="${#fields.hasErrors('contact')}" th:errors="*{contact}"></span>
     </div>
 
     <div class="row mb-3">
-      <label class="col-sm-3 control-label" for="input">Input:</label>
+      <label class="col-sm-3 control-label" for="location">Location:</label>
       <div class="col-sm-9">
-        <input class="form-control" type="text" th:field="*{input}"
-               th:value="${session.problem.input}"/>
+        <input class="form-control" type="text" th:field="*{location}"
+               th:value="${session.camp.location}"/>
       </div>
-      <span class="text-primary" th:if="${#fields.hasErrors('input')}" th:errors="*{input}"></span>
+      <span class="text-primary" th:if="${#fields.hasErrors('location')}" th:errors="*{location}"></span>
     </div>
 
+
+
     <div class="row mb-3">
-      <label class="col-sm-3 control-label" for="answer">Answer:</label>
+      <label class="col-sm-3 control-label" for="campDate">Dates:</label>
       <div class="col-sm-9">
-        <input class="form-control" type="text" th:field="*{answer}"
-               th:value="${session.problem.answer}"/>
+        <input class="form-control" type="text" th:field="*{campDate}"
+               th:value="${session.camp.campDate}"/>
       </div>
-      <span class="text-primary" th:if="${#fields.hasErrors('answer')}" th:errors="*{answer}"></span>
-    </div>
-
-    <div class="row mb-3">
-      <label class="col-sm-5 control-label" for="time">Schedule Release:</label>
-      <div class="col-sm-7">
-        <input type="datetime-local" name="time" id="time">
-        <script>
-            let today = new Date();
-            let future = new Date(today.setDate(today.getDate() +50)).toISOString().slice(0, 16);
-            today = new Date().toISOString().slice(0, 16);
-
-            document.getElementsByName("time")[0].min = today;
-            document.getElementsByName("time")[0].max = future;
-
-        </script>
-      </div>
+      <span class="text-primary" th:if="${#fields.hasErrors('campDate')}" th:errors="*{campDate}"></span>
     </div>
 
     <button type="submit" class="btn btn-primary col-md-4" id="submit">Submit</button>
 
-
     <h1 th:text="${msg}"></h1>
 
-
-
-
-
   </form>
-  <form th:action="@{/admin/delete?id={id}(id=${session.problem.problemId})}"  method="post">
-    <button class="btn btn-primary col-md-4" id="delete"   onclick="if(!confirm('del?')){return false;}">Delete</button>
+
+
+  <form th:action="@{/admin/delete?id={id}(id=${session.camp.campId})}"  method="post">
+    <button class="btn btn-primary col-md-4" id="delete" onclick="if(!confirm('del?')){return false;}">Delete</button>
     <h1 th:text="${del}"></h1>
     </div>
   </form>

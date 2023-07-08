@@ -34,9 +34,15 @@ public class IndexController {
         PageHelper.startPage(page, size);
 
         List<Camp> camps = campMapper.getCamps();
-
         if(key!=null){
+             System.out.println(key);
              camps = campMapper.getCampsByKey(key);
+        }
+
+        for(Camp c: camps){
+            c.setUnrating(10-c.getRating());
+            System.out.print(c.getTitle()+" ");
+            System.out.println(c.getUnrating());
         }
 
         PageInfo<Camp> pageInfo = new PageInfo<Camp>(camps, size);

@@ -60,6 +60,8 @@ public class CampController {
     public String add(@RequestParam(required=false,value="id") int id, Model model){
         Camp camp = campMapper.getCampById(id);
         model.addAttribute("campInfo", camp);
+        camp.setUnrating(10-camp.getRating());
+//        logger.info("rating:" + campMapper.getRatingCampById(id));
         return "camp";
     }
 

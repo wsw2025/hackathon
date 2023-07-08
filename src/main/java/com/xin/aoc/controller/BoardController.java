@@ -2,6 +2,8 @@ package com.xin.aoc.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.xin.aoc.mapper.CampMapper;
+import com.xin.aoc.model.Camp;
 import com.xin.aoc.model.UserInfo;
 import com.xin.aoc.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,8 @@ import java.util.List;
 public class BoardController {
     @Autowired
     private UserInfoService userinfoService;
+    @Autowired
+    private CampMapper campMapper;
 
     @RequestMapping(value = "/leaderboard", method = RequestMethod.GET)
     public String list(@RequestParam(required = false, defaultValue = "1", value = "page") Integer page, Model model) {
@@ -24,8 +28,8 @@ public class BoardController {
         int size = 8;
         PageHelper.startPage(page, size);//分页
 
-        List<UserInfo> users = userinfoService.getAllUserInfo();
-        PageInfo<UserInfo> pageInfo = new PageInfo<UserInfo>(users, size);
+        List<Camp> camps = campMapper.getCampsByRating();
+        PageInfo<Camp> pageInfo = new PageInfo<Camp>(camps, size);
         model.addAttribute("pageInfo", pageInfo);
         return "leaderboard";
     }
