@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.xin.aoc.form.ProblemForm;
 import com.xin.aoc.form.UserForm;
 import com.xin.aoc.mapper.CampMapper;
+import com.xin.aoc.mapper.RatingMapper;
 import com.xin.aoc.mapper.SubmissionMapper;
 import com.xin.aoc.model.Camp;
 import com.xin.aoc.model.Problem;
@@ -55,13 +56,25 @@ public class CampController {
     private SubmissionMapper submissionMapper;
     @Autowired
     private CampMapper campMapper;
+    @Autowired
+    private RatingMapper ratingMapper;
 
     @GetMapping(value="/camp")
-    public String add(@RequestParam(required=false,value="id") int id, Model model){
+    public String add(@RequestParam(required=false,value="id") int id, Model model, HttpServletRequest request){
         Camp camp = campMapper.getCampById(id);
+
         model.addAttribute("campInfo", camp);
+        UserInfo user = (UserInfo)request.getSession().getAttribute("login_user");
+        int rate = 0;
+
+        if(user!=null) {
+            if(ratingMapper.checkExist(user.getUserId(),id)>0){
+                rate = ratingMapper.getRatingByUser(user.getUserId(),id);
+            }
+        }
+        model.addAttribute("rating",rate);
+        model.addAttribute("unrating",10-rate);
         camp.setUnrating(10-camp.getRating());
-//        logger.info("rating:" + campMapper.getRatingCampById(id));
         return "camp";
     }
 

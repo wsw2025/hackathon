@@ -13,5 +13,6 @@ public class Camp {
     private String contact;
     private String location;
     private int unrating;
+    private int ratingCount;
 
 }

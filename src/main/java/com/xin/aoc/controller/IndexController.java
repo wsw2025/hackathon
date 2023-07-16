@@ -3,6 +3,7 @@ package com.xin.aoc.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xin.aoc.mapper.CampMapper;
+import com.xin.aoc.mapper.RatingMapper;
 import com.xin.aoc.model.Camp;
 import com.xin.aoc.model.UserInfo;
 import com.xin.aoc.service.RecordService;
@@ -22,7 +23,7 @@ public class IndexController {
     @Autowired
     private CampMapper campMapper;
     @Autowired
-    private RecordService recordService;
+    private RatingMapper ratingMapper;
 
     @RequestMapping(value = "/")
     public String search(@RequestParam(required = false, defaultValue = "1", value = "page")
@@ -41,8 +42,7 @@ public class IndexController {
 
         for(Camp c: camps){
             c.setUnrating(10-c.getRating());
-            System.out.print(c.getTitle()+" ");
-            System.out.println(c.getUnrating());
+            c.setRatingCount(ratingMapper.getRatingCount(c.getCampId()));
         }
 
         PageInfo<Camp> pageInfo = new PageInfo<Camp>(camps, size);

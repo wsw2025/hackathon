@@ -6,43 +6,29 @@
 <style>.stars {
   display: inline-block;
   font-size: 0;
+  white-space: nowrap;
+}
+
+
+
+
+ .stars {
+  display: flex;
+  flex-direction: row;
 }
 
 .star {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  margin: 0;
-  padding: 0;
-  cursor: pointer;
-  color: grey;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-right: 5px; /* adjust as needed */
 }
 
 .star > span {
   color: grey;
+  font-size: 20px; /* adjust as needed */
 }
-
-  .star.active > span {
-  color: orange;
-}
-  .star:hover > span {
-    color: orange;
-  }
-  <style>
-  .stars {
-    display: inline-block;
-    font-size: 0;
-  }
-
-  .star {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    margin: 0;
-    padding: 0;
-    cursor: pointer;
-    color: grey;
-  }
 
   .star > span {
     color: grey;
@@ -60,6 +46,16 @@
   .star:not(.active) > span {
     color: grey;
   }
+
+
+.container {
+  display: flex;
+  flex-direction: row;
+}
+
+.container > div {
+  margin-right: 10px; /* adjust as needed */
+}
 </style>
 </style>
 <body>
@@ -94,22 +90,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
       }
 
-      // Post the value of the clicked star to the /rate route
-      fetch('/rate', {
-        method: 'POST',
-        body: JSON.stringify({ value }),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
+       fetch('/rate', {
+          method: 'POST',
+          body: JSON.stringify({
+            value,
+            campId: [[${campInfo.campId}]]
+           }),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+       location.reload();
+
     });
   });
 });
 </script>
 
+
   <h1 th:text="${campInfo.title}"></h1>
   <nav class="navbar navbar-expand-lg navbar-light bg-light mb-3">
-
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
       <ul class="navbar-nav">
         <li class="nav-item active">
@@ -121,24 +122,30 @@ document.addEventListener('DOMContentLoaded', () => {
       </ul>
     </div>
   </nav>
+
 </section>
+
 
 <section>
   <div class="row">
     <div class="column left">
       <div th:text="${campInfo.content}" style="white-space: pre-line;"> </div>
-      <div class="stars">
-        <span class="star" data-value="1"><span style="color: grey">&#9734;</span></span>
-        <span class="star" data-value="2"><span style="color: grey">&#9734;</span></span>
-        <span class="star" data-value="3"><span style="color: grey">&#9734;</span></span>
-        <span class="star" data-value="4"><span style="color: grey">&#9734;</span></span>
-        <span class="star" data-value="5"><span style="color: grey">&#9734;</span></span>
-        <span class="star" data-value="6"><span style="color: grey">&#9734;</span></span>
-        <span class="star" data-value="7"><span style="color: grey">&#9734;</span></span>
-        <span class="star" data-value="8"><span style="color: grey">&#9734;</span></span>
-        <span class="star" data-value="9"><span style="color: grey">&#9734;</span></span>
-        <span class="star" data-value="10"><span style="color: grey">&#9734;</span></span>
+
+      <div th:if="${session.login_user != null}"  style="display: flex; margin-top: 10px;">
+        <div th:if="${rating}!=0" th:each="i : ${#numbers.sequence(1, rating)}">
+          <span class="star" th:data-value="${i}">
+              <span style="color: orange">&#9733;</span>
+          </span>
+        </div>
+
+        <div  th:if="${unrating}!=0" th:each="i : ${#numbers.sequence(rating + 1, 11)}">
+          <span class="star" th:data-value="${i}">
+              <span style="color: grey">&#9734;</span>
+          </span>
+        </div>
       </div>
+
+      <div th:if="${session.login_user == null}"><p>login to rate this program</p></div>
     </div>
     <div class="column right">
 
@@ -158,8 +165,28 @@ document.addEventListener('DOMContentLoaded', () => {
         <div th:text="${campInfo.location}" style="white-space: pre-line;"> </div>
       </div>
 
+      <div class="mb-4">
+        <h5>Rating:</h5>
+
+        <div style="display:flex;">
+          <div th:if="${campInfo.rating}!=0" th:each="i : ${#numbers.sequence(1, campInfo.rating)}">
+            <span  style="color: orange;">&#9733;</span>
+          </div>
+
+          <div  th:if="${campInfo.rating}!=10" th:each="i : ${#numbers.sequence(1, campInfo.unrating)}">
+            <span style="color: grey;">&#9734;</span>
+          </div>
+
+          <div>
+            <p style="color:grey" th:text="' ('+${campInfo.ratingCount}+') '">
+            </p>
+          </div>
+        </div>
+
+      </div>
     </div>
   </div>
+
 
 </section>
 

@@ -62,11 +62,11 @@ public class MailServiceImpl implements MailService {
         try {
             Gmail service = new Gmail.Builder(new NetHttpTransport(),
                     GsonFactory.getDefaultInstance(), getCredential())
-                    .setApplicationName("aoc")
+                    .setApplicationName("scamx")
                     .build();
 
             // Encode as MIME message
-            String fromEmailAddress = "aoc <noreply@gmail.com>";
+            String fromEmailAddress = "scamx <noreply@gmail.com>";
             Properties props = new Properties();
             Session session = Session.getDefaultInstance(props, null);
             MimeMessage email = new MimeMessage(session);

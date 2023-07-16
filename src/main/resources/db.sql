@@ -58,7 +58,8 @@ create table if not exists discussions (
    image varchar(64)  not null,
    camp_id int not null,
    content varchar(1000),
-   status int default(0)
+   status int default(0),
+   like_count int default(0)
 );
 
 create table if not exists learns (
@@ -91,13 +92,21 @@ create table if not exists camps (
    rating int default (0),
    contact varchar(10000) default 'none',
    location varchar(10000) default 'none',
-   camp_date varchar(10000) default 'none'
+   camp_date varchar(10000) default 'none',
+   rating_count int default 0
 );
 
 create table if not exists ratings (
    rating_id int auto_increment primary key,
    camp_id int not null,
-   rating int not null
+   rating int not null,
+   user_id int not null
+);
+
+create table if not exists likes (
+   like_id int auto_increment primary key,
+   user_id int not null,
+   discussion_id int not null
 );
 
 
@@ -115,9 +124,8 @@ Sample output
 merge into discussions (discussion_id,cur_date,user_id,nick_name,image,camp_id,content,status) values (1,'2023.02.28.16.42.43',2,'admin','/images/2.png',1,'nothing yet...',0);
 merge into learns (learn_id,title,cur_date,user_id,nick_name,image,content,difficulty,category) values (1,'Begin Here','2023.02.28.16.42.43',2,'admin','/images/2.png','Hi','Begin Here','Help');
 merge into contests (contest_id,title,start,stop,duration,content) values (1,'System Test','2020-03-01T19:32','2040-03-01T19:32',3,'This contest is for system test.');
-merge into camps (camp_id,title,content,category,cur_date,rating) values (1,'Test','some info','Business','2023.02.28.16.42.43',1);
-merge into ratings (rating_id,camp_id,rating) values (1,1,1);
-merge into ratings (rating_id,camp_id,rating) values (2,1,5);
+merge into camps (camp_id,title,content,category,cur_date,rating,rating_count) values (1,'Test','some info','Business','2023.02.28.16.42.43',1,1);
+merge into ratings (rating_id,camp_id,rating,user_id) values (1,1,1,1);
 
 alter table user_info alter column user_id restart with (select max(user_id) from user_info) + 1;
 alter table discussions alter column discussion_id restart with (select max(discussion_id) from discussions) + 1;

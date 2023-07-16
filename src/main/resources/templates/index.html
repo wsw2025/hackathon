@@ -76,6 +76,11 @@ div.center {text-align: center;}
                                     <div  th:if="${camp.rating}!=10" th:each="i : ${#numbers.sequence(1, camp.unrating)}">
                                         <span style="color: grey;">&#9734;</span>
                                     </div>
+                                    <div>
+                                        <p style="color:grey" th:text="' ('+${camp.ratingCount}+') '">
+                                        </p>
+                                    </div>
+
 
                                 <div style="display: inline-block; white-space: pre-line; color:grey;  margin-left: 10px;">&nbsp;Upload Time:</div>
                                 <div th:text="${camp.curDate}" style="display: inline-block; color:grey;"></div>

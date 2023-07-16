@@ -3,9 +3,8 @@ package com.xin.aoc.model;
 import lombok.Data;
 
 @Data
-public class Rating {
-    private int campId;
-    private int rating;
+public class Like {
     private int userId;
+    private int discussionId;
 
 }

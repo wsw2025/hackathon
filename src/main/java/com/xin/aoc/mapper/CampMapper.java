@@ -48,4 +48,8 @@ public interface CampMapper {
     @Delete("delete from camps "+
             "where camp_id=#{campId}")
     boolean delById(int campId);
+
+    @Update("update camps set rating=#{rating} " +
+            "where camp_id=#{campId}")
+    boolean updateCampRating(int rating, int campId);
 }

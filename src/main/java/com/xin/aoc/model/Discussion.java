@@ -12,4 +12,6 @@ public class Discussion {
     private int campId;
     private String content;
     private int status;
+    private int likeCount;
+    private boolean liked;
 }

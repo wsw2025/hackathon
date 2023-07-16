@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xin.aoc.mapper.CampMapper;
 import com.xin.aoc.mapper.DiscussionMapper;
+import com.xin.aoc.mapper.LikeMapper;
 import com.xin.aoc.mapper.ProblemMapper;
 import com.xin.aoc.model.Camp;
 import com.xin.aoc.model.Discussion;
@@ -36,6 +37,8 @@ public class DiscussionController {
     private Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     private CampMapper campMapper;
+    @Autowired
+    private LikeMapper likeMapper;
 
     @GetMapping(value="/camp/discussions")
     public String discuss(
@@ -55,7 +58,16 @@ public class DiscussionController {
         session.setAttribute("login_user", user);
 
         List<Discussion> discussions = discussionMapper.getDiscussionById(camp.getCampId());
+        if(user!=null) {
+            for (Discussion e : discussions) {
+                if (likeMapper.checkExist(user.getUserId(), e.getDiscussionId()) > 0) {
+                    e.setLiked(true);
+                } else {
+                    e.setLiked(false);
 
+                }
+            }
+        }
 
         PageInfo<Discussion> pageInfo = new PageInfo<Discussion>(discussions, size);
         model.addAttribute("pageInfo", pageInfo);

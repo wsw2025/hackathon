@@ -5,7 +5,6 @@
 </head>
 <body>
 
-
 <section class="mb-3">
 
   <h1 th:text="${campInfo.title}"></h1>
@@ -32,7 +31,7 @@
 
 <section>
 
-  <script>
+  <script type="text/javascript" th:inline="javascript">
   function enableSubmit() {
   var input = document.getElementById("content").value;
   var submitBtn = document.getElementById("submit");
@@ -44,6 +43,54 @@
 }
 
 
+document.addEventListener('DOMContentLoaded', () => {
+  const likeButtons = document.querySelectorAll('.like');
+  likeButtons.forEach((likeButton) => {
+
+    likeButton.addEventListener('click', () => {
+      const discussionId = likeButton.getAttribute('data-value');
+      const user = /*[[${session.login_user}]]*/;
+      if (user == null) {
+        console.log('null');
+        alert('You must be logged in to like a discussion.');
+        return;
+      }
+
+      if (likeButton.classList.contains('liked')) {
+        //unlike
+        likeButton.classList.remove('liked');
+        const value = 0;
+        fetch('/like', {
+          method: 'POST',
+          body: JSON.stringify({
+            value,
+            discussionId,
+            campId: [[${campInfo.campId}]]
+          }),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+      } else {
+        likeButton.classList.add('liked');
+        const value = 1;
+        fetch('/like', {
+          method: 'POST',
+          body: JSON.stringify({
+            value,
+            discussionId,
+            campId: [[${campInfo.campId}]]
+          }),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+      }
+      location.reload();
+    });
+  });
+});
   </script>
 
 
@@ -93,6 +140,18 @@
             <div style="display: flex; margin-top: 10px;">
               <div style="display: inline-block; white-space: pre-line; color:grey;">Upload Time:</div>
               <div th:text="${discussion.curDate}" style="display: inline-block; color:grey;"></div>
+
+              <div th:if="${discussion.liked}==true">
+                <span th:data-value="${discussion.discussionId}" class="like liked"><i class="fa fa-heart"></i></span>
+              </div>
+              <div th:if="${discussion.liked}==false">
+                <span th:data-value="${discussion.discussionId}" class="like"><i class="fa fa-heart"></i></span>
+              </div>
+
+              <div>
+                <p style="color:grey" th:text="' ('+${discussion.likeCount}+') '">
+                </p>
+              </div>
 
               <form th:action="@{/camp/discussions/del}" method="post">
                 <input type="hidden" id="id" name="id" th:value="${campInfo.campId}"/>
