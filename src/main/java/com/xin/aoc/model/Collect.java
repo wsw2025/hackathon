@@ -3,7 +3,7 @@ package com.xin.aoc.model;
 import lombok.Data;
 
 @Data
-public class Like {
+public class Collect {
     private int userId;
     private int postId;
 }

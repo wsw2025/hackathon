@@ -46,9 +46,6 @@ div.center {text-align: center;}
     </nav>
 
 
-
-
-
   <div th:if="${pageInfo}!=null" th:each="learn : ${pageInfo.list}">
     <div class="row mb-3">
       <div>
@@ -104,7 +101,6 @@ div.center {text-align: center;}
       <li class="pull-right ">
         <a th:href="'learn?page=' + ${pageInfo.pages}">Last Page</a>
       </li>
-
     </div>
   </div>
 </section>

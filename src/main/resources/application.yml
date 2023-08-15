@@ -8,9 +8,9 @@ spring:
 
   datasource:
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:file:./scamx
-    username: scamx
-    password: scamx
+    url: jdbc:h2:file:./milkipedia
+    username: milkipedia
+    password: milkipedia
 
   sql:
     init:
@@ -33,4 +33,4 @@ mybatis:
     map-underscore-to-camel-case: true
 
 server:
-  port: 1000
+  port: 8080

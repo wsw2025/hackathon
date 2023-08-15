@@ -1,6 +1,5 @@
 package com.xin.aoc.service.impl;
 
-import com.xin.aoc.controller.UserController;
 import com.xin.aoc.mapper.UserInfoMapper;
 import com.xin.aoc.model.UserInfo;
 import com.xin.aoc.service.UserInfoService;

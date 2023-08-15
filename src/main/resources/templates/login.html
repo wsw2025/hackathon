@@ -1,26 +1,64 @@
+<!--<!DOCTYPE html>-->
+<!--<html th:replace="~{layout::layout(~{::title},~{::section})}">-->
+<!--<head>-->
+<!--  <title>Login</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--<section class="col-md-4 mx-auto" style="max-width: 400px">-->
+<!--  <form action="/login" method="post">-->
+<!--    <h3>Please enter your username and password:</h3>-->
+<!--    <h4 class="text-warning" th:text="${msg}"></h4>-->
+<!--    <div class="form-group mb-3">-->
+<!--      <label for="username">username</label>-->
+<!--      <input type="text" class="form-control" id="username" name="username">-->
+<!--    </div>-->
+<!--    <div class="form-group mb-3">-->
+<!--      <label for="password">password</label>-->
+<!--      <input type="password" class="form-control" id="password" name="password">-->
+<!--    </div>-->
+<!--    <div class="form-group mb-3">-->
+<!--      <button type="submit" class="btn btn-primary col-md-4">login</button>-->
+<!--      <a class="p-4" href="/forget_password">forgot password</a>-->
+<!--    </div>-->
+<!--  </form>-->
+<!--</section>-->
+<!--</body>-->
+<!--</html>-->
+
+
 <!DOCTYPE html>
 <html th:replace="~{layout::layout(~{::title},~{::section})}">
 <head>
-  <title>Login</title>
+  <meta charset="UTF-8">
+  <title> Registration or Sign Up form in HTML CSS | CodingLab </title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<section class="col-md-4 mx-auto" style="max-width: 400px">
+<section  class="col-md-4 mx-auto" >
+  <div class="login-wrapper">
+  <h2>Login</h2>
+
   <form action="/login" method="post">
-    <h3>Please enter your username and password:</h3>
-    <h4 class="text-warning" th:text="${msg}"></h4>
-    <div class="form-group mb-3">
-      <label for="username">username</label>
-      <input type="text" class="form-control" id="username" name="username">
+    <div class="input-box">
+      <input type="text" placeholder="Enter your username" id="username" name="username" required>
     </div>
-    <div class="form-group mb-3">
-      <label for="password">password</label>
-      <input type="password" class="form-control" id="password" name="password">
+    <div class="input-box">
+      <input type="password" placeholder="Enter your password" id="password" name="password" required>
     </div>
-    <div class="form-group mb-3">
-      <button type="submit" class="btn btn-primary col-md-4">login</button>
-      <a class="p-4" href="/forget_password">forgot password</a>
+
+    <div class="policy">
+      <h3 class="text-warning" style="margin-bottom: 0rem" th:text="${msg}"></h3>
+    </div>
+
+    <div class="input-box button">
+      <input type="Submit" value="Login">
+    </div>
+    <div class="text">
+      <h3>Don't have an account? <a href="/register">Sign up now</a></h3>
     </div>
   </form>
+</div>
 </section>
 </body>
+
 </html>

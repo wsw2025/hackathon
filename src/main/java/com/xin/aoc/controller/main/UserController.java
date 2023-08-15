@@ -1,4 +1,4 @@
-package com.xin.aoc.controller;
+package com.xin.aoc.controller.main;
 
 import com.xin.aoc.form.UserForm;
 import com.xin.aoc.mapper.ContestMapper;
@@ -26,8 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -94,6 +92,7 @@ public class UserController {
     public String register(@ModelAttribute("obj") @Validated UserForm user,
                            BindingResult rs, HttpServletRequest request, Model model) {
         if (rs.hasErrors()) {
+            logger.info("register info invalid");
             return "register";
         }
         String code = (String)request.getSession().getAttribute(CHECK_CODE);
@@ -110,11 +109,11 @@ public class UserController {
         userInfo.setNickName(user.getNickName());
         userInfo.setPassword(getPasswordMd5(user.getPassword()));
         if (userInfoService.addUserInfo(userInfo)) {
-            model.addAttribute("register_success", "ok");
+            model.addAttribute("msg", "succeeded! login now");
         } else {
-            model.addAttribute("msg", "add user failure.");
+            model.addAttribute("msg", "failed");
         }
-        return "redirect:/login";
+        return "register";
     }
 
     private String getPasswordMd5(String password) {
@@ -221,14 +220,12 @@ public class UserController {
 
     @GetMapping("/user/setting")
     public String edit(@ModelAttribute("obj") UserForm userInfo, Model model, HttpServletRequest request) {
-
         HttpSession session = request.getSession();
         UserInfo user = (UserInfo)request.getSession().getAttribute("login_user");
         userInfo.setNickName(user.getNickName());
         userInfo.setEmail(user.getEmail());
         userInfo.setUserName(user.getUserName());
         userInfo.setPassword(user.getPassword());
-
         session.setAttribute("login_user", user);
         model.addAttribute("username", user.getUserName());
         return "user/setting";
@@ -260,22 +257,31 @@ public class UserController {
         logger.info(file.getOriginalFilename()+"profile_pic name");
     }
     @PostMapping("/user/setting")
-    public String handleFileUpload(@ModelAttribute("obj") UserForm userInfo,
-                                   @RequestParam(value="file", required = false) MultipartFile file,
-                                   @Validated UserForm editUser,
-                                   HttpServletRequest request,
-                                   BindingResult rs,
-                                   Model model) {
+    public String editProfile(@ModelAttribute("obj") @Validated UserForm editUser,
+                              BindingResult rs, HttpServletRequest request, Model model,
+                              @RequestParam(value="file", required = false) MultipartFile file) {
+
+
         if (rs.hasErrors()) {
+            logger.info("reset info invalid");
             return "user/setting";
         }
 
-        UserInfo user = (UserInfo)request.getSession().getAttribute("login_user");
         HttpSession session = request.getSession();
+        UserInfo user = (UserInfo)request.getSession().getAttribute("login_user");
         session.setAttribute("login_user", user);
-        if (file!=null) {
+
+        if (file!=null && file.getOriginalFilename().length()>0) {
+            logger.info("file name:" + file.getOriginalFilename());
             uploadFile(file, user);
+            model.addAttribute("msg1", "Profile image reset succeeded");
+            return "user/setting";
+        }else if(file==null){
+            logger.info("didn't change profo");
+        }else{
+            model.addAttribute("msg1", "Profile image reset failed");
         }
+
         UserInfo newUser = new UserInfo();
         if (editUser!=null) {
             newUser.setUserId(user.getUserId());
@@ -287,22 +293,23 @@ public class UserController {
         }
         logger.info(" !!"+newUser.getUserName());
         if (userInfoService.changeAllUserInfo(newUser)) {
-            userInfo.setNickName(newUser.getImage());
-            userInfo.setNickName(newUser.getNickName());
-            userInfo.setEmail(newUser.getEmail());
-            userInfo.setUserName(newUser.getUserName());
-            userInfo.setPassword(newUser.getPassword());
             session.setAttribute("login_user", newUser);
             model.addAttribute("msg", "reset success");
             discussionMapper.updateAll(newUser);
             learnMapper.updateAll(newUser);
             contestMapper.updateAll(newUser);
             recordMapper.updateAll(newUser);
-
         } else {
             model.addAttribute("msg", "reset failed");
         }
 
         return "user/setting";
+    }
+
+
+
+    @RequestMapping("/terms")
+    public String terms() {
+        return "terms";
     }
 }

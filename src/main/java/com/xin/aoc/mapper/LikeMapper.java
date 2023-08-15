@@ -9,23 +9,22 @@ import org.apache.ibatis.annotations.*;
 import java.util.List;
 
 public interface LikeMapper {
-    @Insert("insert into likes (discussion_id, user_id) " +
-            "values (#{discussionId},#{userId})")
+    @Insert("insert into likes (post_id, user_id) " +
+            "values (#{postId},#{userId})")
     void like(Like like);
 
-    @Select("SELECT count(*) from likes WHERE user_id=#{userId} and discussion_id=#{discussionId}")
-    int checkExist(int userId, int discussionId);
+    @Select("SELECT count(*) from likes WHERE user_id=#{userId} and post_id=#{postId}")
+    int checkExist(int userId, int postId);
 
     @Delete("delete from likes "+
-            "where user_id=#{userId} and discussion_id=#{discussionId}")
+            "where user_id=#{userId} and post_id=#{postId}")
     void unlike(Like like);
 
+    @Update("update posts set likes=likes-1 " +
+            "where post_id=#{postId}")
+    void minusLikeCount(int postId);
 
-    @Update("update discussions set like_count=like_count-1 " +
-            "where discussion_id=#{discussionId}")
-    void minusLikeCount(int discussionId);
-
-    @Update("update discussions set like_count=like_count+1 " +
-            "where discussion_id=#{discussionId}")
-    void addLikeCount(int discussionId);
+    @Update("update posts set likes=likes+1 " +
+            "where post_id=#{postId}")
+    void addLikeCount(int postId);
 }

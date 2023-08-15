@@ -106,21 +106,29 @@ create table if not exists ratings (
 create table if not exists likes (
    like_id int auto_increment primary key,
    user_id int not null,
-   discussion_id int not null
+   post_id int not null
+);
+
+create table if not exists collects (
+   collect_id int auto_increment primary key,
+   user_id int not null,
+   post_id int not null
+);
+
+create table if not exists posts (
+   post_id int auto_increment primary key,
+   title varchar(64) not null,
+   content varchar(10000) not null,
+   post_date varchar(10000),
+   likes int default (0),
+   user_id int not null,
+   video int default (0),
+   image int default (0)
 );
 
 
 merge into user_info (user_id,user_name,password,email,nick_name) values (1,'test','ac9f51135e87e3405a4b069239db707c','test@gmail.com','test_account');
 merge into user_info (user_id,user_name,password,email,nick_name,is_admin) values (2,'admin','60832ad22ebaf10344bd30c2838e5551','admin@gmail.com','admin',1);
-merge into problems (problem_id,title,problem,answer,in_put,difficulty,category) values (1,'A+B Problem','Given two numbers a and b, output the sum of a and b.
-
-Sample input
-8 9
-
-Sample output
-17','101','55 46','Very Easy','Start Here');
-
-
 merge into discussions (discussion_id,cur_date,user_id,nick_name,image,camp_id,content,status) values (1,'2023.02.28.16.42.43',2,'admin','/images/2.png',1,'nothing yet...',0);
 merge into learns (learn_id,title,cur_date,user_id,nick_name,image,content,difficulty,category) values (1,'Begin Here','2023.02.28.16.42.43',2,'admin','/images/2.png','Hi','Begin Here','Help');
 merge into contests (contest_id,title,start,stop,duration,content) values (1,'System Test','2020-03-01T19:32','2040-03-01T19:32',3,'This contest is for system test.');

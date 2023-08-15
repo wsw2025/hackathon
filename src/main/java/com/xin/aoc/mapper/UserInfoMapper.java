@@ -33,4 +33,11 @@ public interface UserInfoMapper {
 
     @Select("select nick_name from user_info where user_id=#{userId}")
     public String getCurNickName(int userId);
+
+    @Select("select user_name from user_info where user_id=#{userId}")
+    public String getUserName(int userId);
+
+    @Select("select image from user_info where user_id=#{userId}")
+    public String getUserImage(int userId);
 }
+

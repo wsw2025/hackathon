@@ -1,5 +1,6 @@
 package com.xin.aoc.controller;
 
+import com.xin.aoc.controller.main.UserController;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

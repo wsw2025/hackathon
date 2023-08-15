@@ -1,4 +1,4 @@
-package com.xin.aoc.controller;
+package com.xin.aoc.controller.main;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;

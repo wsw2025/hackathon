@@ -2,18 +2,51 @@
 <html th:replace="~{layout::layout(~{::title},~{::section})}">
 <head>
     <title>Register</title>
+    <meta charset="UTF-8">
+    <style>
+.padded-tag {
+  padding: 5px; /* set your desired padding value */
+}
+ul.pagination {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+}
+
+ul.pagination li {display: inline;}
+
+ul.pagination li a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+    border: 1px solid #ddd;
+}
+
+ul.pagination li a.active {
+    background-color: #4CAF50;
+    color: white;
+    border: 1px solid #4CAF50;
+}
+
+ul.pagination li a:hover:not(.active) {background-color: #ddd;}
+
+div.center {text-align: center;}
+</style>
 </head>
+
 <section th:if="${register_success != null}">
     <h1>Register Success!</h1>
 </section>
-<section class="col-md-8 mx-auto" style="max-width: 800px" th:if="${register_success == null}">
+<section class="col-md-4 mx-auto" th:if="${register_success == null}">
     <script type="text/javascript" th:inline="javascript">
   function checkTime(left) {
     if (left <= 0) {
       $("#btnCheckCode").prop('value', 'Get verification code');
       $("#btnCheckCode").removeAttr('disabled');
     } else {
-      $("#btnCheckCode").prop('value', 'after ' + left + ' seconds');
+      $("#btnCheckCode").prop('value', 'after ' + left + ' s');
       $("#btnCheckCode").attr('disabled', true);
       setTimeout('checkTime('+(left-1)+')', 1000);
     }
@@ -31,7 +64,7 @@
   }
   function doCheckUsername() {
     var original = /*[[${username}]]*/ 'Unknown';
-    var load_url = "/check_username";
+    var load_url = "/check_username_register";
     var userName = $("#userName").val();
 
     $.post(load_url, {userName: userName}, function(data) {
@@ -45,79 +78,74 @@
     });
   }
 
- $(document).ready(function(){
-        $('input[type="file"]').change(function(e){
-            var fileName = e.target.files[0].name;
-            alert('The file "' + fileName +  '" has been selected.');
-             if(e.target.files[0].size > 2097152){
-               alert("File is too big! Please upload a file smaller than 100KB!");
-               e.target.value = "";
 
-            };
-        });
-    });
-
-function doCheckCode() {
-   if ($('#file')[0].files.length === 0) {
-    window.alert("Missing file!");
-    return false;
-    }
-  }
 
 </script>
-    <form action="/user/setting" method="post" enctype="multipart/form-data">
-        <label for="file" >
-            <input type="file" name="file" id="file" style="display:none;" accept=" image/png, image/jpeg" multiple/>
-            <img width="100" height="100" class="mt-3 mb-5" th:src="${session.login_user.image}"  style="border-radius: 50%; margin:0px 5px; width=60px height=60px; border:1px solid #555; align:center">
-        </label>
-        <button type="submit" class="btn btn-primary col-md-3" id="Submit" onclick="doCheckCode()">Save</button>
+
+    <div class="login-wrapper">
+    <h2>Setting</h2>
+    <form th:action="@{/user/setting}" method="post" enctype="multipart/form-data">
+            <div style="text-align: center;">
+                <label for="file">
+                    <input type="file" name="file" id="file" style="display:none;" accept="image/png, image/jpeg" multiple/>
+                    <img width="100" height="100" class="mb-1" th:src="${session.login_user.image}" style="border-radius: 50%; margin:0px 5px; width=60px height=60px; border:1px solid ##ed4da; align:center">
+                </label>
+            </div>
+
+            <h3 style="text-align: center;" class="text-warning"  th:text="${msg1}"></h3>
+
+            <div style="text-align: center;"class="input-box button">
+                <input value="Save" type="Submit" style="width:80px; height:40px" id="Submit" onclick="doCheckReady()">
+            </div>
     </form>
 
-    <form action="/user/setting" th:object="${obj}" method="post">
+    <form th:action="@{/user/setting}" th:object="${obj}" method="post">
+
         <div class="row mb-3">
-            <label class="col-sm-3 control-label" for="userName"  >username</label>
+            <label class="col-sm-3 control-label" for="nickName" >Username</label>
             <div class="col-sm-9">
                 <input class="form-control" oninput="doCheckUsername()"
                        type="text" th:field="*{userName}" id="userName"
-                       th:value="${userName}"
-                       />
+                       th:value="${userName}" placeholder="Enter your username"
+                       required/>
             </div>
-            <span id="labUserName" class="text-primary" style="display: none">username already exists</span>
-            <span class="text-primary" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></span>
+                <h3 id="labUserName" class="text-warning" style="display: none">username already exists</h3>
+                <h3 class="text-warning" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></h3>
         </div>
 
         <div class="row mb-3">
-            <label class="col-sm-3 control-label" for="nickName" >nickname</label>
+            <label class="col-sm-3 control-label" for="nickName" >Nickname</label>
             <div class="col-sm-9">
-                <input class="form-control" type="text" th:value="${session.login_user.nickName}" id="nickName" th:field="*{nickName}" />
+                <input class="form-control" type="text" th:value="${session.login_user.nickName}" id="nickName" th:field="*{nickName}" placeholder="Enter your new nickname" required/>
             </div>
-            <span class="text-primary" th:if="${#fields.hasErrors('nickName')}" th:errors="*{nickName}"></span>
+            <h3 class="text-warning" th:if="${#fields.hasErrors('nickName')}" th:errors="*{nickName}"></h3>
         </div>
 
         <div class="row mb-3">
-            <label class="col-sm-3 control-label" for="password">password</label>
-            <div class="col-sm-9">
-                <input class="form-control" type="password" th:field="*{password}" id="password"
-                       th:value="${session.login_user.password}"/>
-            </div>
-            <span class="text-primary" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
-        </div>
-
-        <div class="row mb-3">
-            <label class="col-sm-3 control-label" for="email">email</label>
+            <label class="col-sm-3 control-label" for="email">Email</label>
             <div class="col-sm-9">
                 <input class="form-control" type="text" th:field="*{email}" id="email"
-                       th:value="${session.login_user.email}"/>
+                       th:value="${session.login_user.email}" placeholder="Enter your new email" required/>
             </div>
-            <span class="text-primary" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+            <h3 class="text-warning" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></h3>
         </div>
 
-
-        <div class="form-group mb-3">
-            <button type="submit" class="btn btn-primary col-md-3" id="btnSubmit">Save</button>
+        <div class="row mb-3">
+            <label class="col-sm-3 control-label" for="password">Password</label>
+            <div class="col-sm-9">
+                <input class="form-control" type="password" th:field="*{password}" id="password"
+                       th:value="${session.login_user.password}" placeholder="Enter your new password" required/>
+            </div>
+            <h3 class="text-warning" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></h3>
         </div>
 
-        <h3 th:text="${msg}"></h3>
+        <h3 class="text-warning"  th:text="${msg}"></h3>
+
+        <div class="input-box button">
+            <input type="Submit" value="Save" id="btnSubmit">
+        </div>
+
     </form>
+    </div>
 </section>
 </html>

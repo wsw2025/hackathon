@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html th:replace="~{layout::layout(~{::title},~{::section})}">
+<head>
+  <title>My POsts</title>
+  <meta charset="UTF-8">
+
+</head>
+<body >
+<!--</header>-->
+<section >
+  <h3 class="mb=5">My Posts</h3>
+  <div class="card-left card-column">
+    <div class="row " th:if="${pageInfo}!=null" th:each="post : ${pageInfo.list}">
+      <div class="card" style=" position: relative;">
+        <div class="card-header">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <img th:src="${post.userImage}" width="40" height="40" style="border-radius: 50%; vertical-align: middle; margin: 6px 5px">
+              <p th:text="${post.username}" style="display: inline-block;"></p>
+            </div>
+            <div class="dropdown" th:if="${session.login_user != null} and ${post.userId == session.login_user.userId}">
+              <a class="dropdown-toggle dropdown-toggle-no-caret" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-ellipsis-v" style="color: #adb5bd;"></i>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <form  class="dropdown-item" th:action="@{/user/del}" method="post">
+                  <input type="hidden" id="id" name="id" th:value="${post.postId}"/>
+                  <input type="hidden" id="user_id" name="user_id" th:value="${post.userId}"/>
+                  <button th:if="${session.login_user != null} and ${post.userId == session.login_user.userId}"
+                          onclick="return confirm('Do you want to delete your post?')"
+                          style="border: none; background-color: transparent;" type="submit">
+                    Delete
+                  </button>
+                </form>
+
+                <form  class="dropdown-item" th:action="@{'/user/edit?id=' + ${post.postId}}" method="get">
+                  <input type="hidden" id="post_id" name="id" th:value="${post.postId}"/>
+                  <button th:if="${session.login_user != null} and ${post.userId == session.login_user.userId}"
+                          style="border: none; background-color: transparent;" type="submit">
+                    Edit
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-body mt-1" style="display: flex; flex-direction: column;">
+          <div class="mb-2" style="display: flex; margin-top: 2px; margin-left:5px">
+            <h3  th:text="${post.title}"><a href="#"></a></h3>
+            <div  style="margin-left:10px">
+            </div>
+          </div>
+
+          <div style="display: flex; margin-left: 5px; width: 865px;">
+            <p th:text="${post.content}" style="flex: 1;"><a href="#"></a></p>
+          </div>
+
+          <div class="button-row">
+            <button class="comment-button"><i class="fa fa-comment"></i> Comment</button>
+
+            <div th:if="${post.liked}==true" style="display: flex; align-items: center; margin-right: 10px;">
+              <span th:data-value="${post.postId}" class="like liked" style="margin-right: 4px;"><i class="fa fa-heart"></i></span>
+              <p th:text="${post.likes}" style="margin: 0;"></p>
+            </div>
+            <div  th:if="${post.liked}==false" style="display: flex; align-items: center; margin-right: 10px;">
+              <span th:data-value="${post.postId}" class="like" style="margin-right: 4px;"><i class="fa fa-heart"></i></span>
+              <p th:text="${post.likes}" style="margin: 0;"></p>
+            </div>
+
+            <button class="collect-button"><i class="fa fa-bookmark"></i> Collect</button>
+            <button  th:text="${post.postDate}" disabled>upload time</button>
+          </div>
+
+          <script type="text/javascript" th:inline="javascript">
+
+document.addEventListener('DOMContentLoaded', () => {
+  const likeButtons = document.querySelectorAll('.like');
+  likeButtons.forEach((likeButton) => {
+
+   likeButton.addEventListener('click', () => {
+      const postId = likeButton.getAttribute('data-value');
+      const user = /*[[${session.login_user}]]*/;
+      if (user == null) {
+        console.log('null');
+        alert('You must be logged in to like a post.');
+        return;
+      }
+
+      if (likeButton.classList.contains('liked')) {
+        //unlike
+        likeButton.classList.remove('liked');
+        const value = 0;
+        fetch('/user/like', {
+          method: 'POST',
+          body: JSON.stringify({
+            value,
+            postId,
+          }),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+      } else {
+        likeButton.classList.add('liked');
+        const value = 1;
+        fetch('/user/like', {
+          method: 'POST',
+          body: JSON.stringify({
+            value,
+            postId,
+          }),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+       }
+      location.reload();
+    });
+  });
+});
+  </script>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+  <div class="card-column card-right">
+    <div class="row ">
+      <div class="card" style=" position: relative;">
+
+        <div class="card-body mt-1 increased-padding" style="display: flex; flex-direction: column;">
+          <p class="mb-1" style="font-weight: semibold;">Create Something...</p>
+
+          <p class="mb-4" style="font-weight: bold;" th:value="${msg}"></p>
+
+          <div class="mb-1"   th:if="${session.login_user == null}">
+            <p style="font-weight:bold;">Please login to post content!</p>
+          </div>
+
+          <div th:if="${session.login_user != null}" class="mb-5 button-container">
+            <a href="/user/write">
+              <div class="circle-button">
+                <i class="fas fa-pencil-alt button-icon"></i>
+                <div class="button-text">Write/Image</div>
+              </div>
+            </a>
+
+            <div class="circle-button">
+              <i class="fas fa-video button-icon"></i>
+              <div class="button-text">Video</div>
+            </div>
+
+            <div class="circle-button">
+              <i class="fas fa-star button-icon"></i>
+              <div class="button-text" style="white-space: nowrap;">Collection</div>
+            </div>
+
+            <a href="/user/posts">
+              <div class="circle-button">
+                <i class="fas fa-clock button-icon"></i>
+                <div class="button-text">Posts</div>
+              </div>
+            </a>
+          </div>
+
+          <p class="mb-2" >Today's quote: life is pretty hard</p>
+        </div>
+
+      </div>
+    </div>
+    <div class="row ">
+      <div class="ad-container mb-2">
+        <div class="ad-content">
+          <!-- Place your ad content here -->
+          <img src="/aoc.jpg" alt="Ad 1">
+          <img src="/aoc.jpg" alt="Ad 2">
+          <img src="/aoc.jpg" alt="Ad 2">
+          <img src="/aoc.jpg" alt="Ad 2">
+          <img src="/aoc.jpg" alt="Ad 2">
+          <img src="/aoc.jpg" alt="Ad 2">
+          <img src="/aoc.jpg" alt="Ad 7">
+          <img src="/aoc.jpg" alt="Ad 2">
+          <img src="/aoc.jpg" alt="Ad 2">
+          <img src="/aoc.jpg" alt="Ad 2">
+          <img src="/aoc.jpg" alt="Ad 2">
+          <img src="/aoc.jpg" alt="Ad 2">
+          <img src="/aoc.jpg" alt="Ad 2">
+
+          <!-- Add more ad content as needed -->
+        </div>
+      </div>
+    </div>
+    <div class="row ">
+      <div class="card" style=" position: relative;">
+
+        <div class="card-body mt-1 increased-padding" style="display: flex; flex-direction: column;">
+          <p style="font-weight: bold;">Discover Friends</p>
+          <div class="card-header" style="padding: 0px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <img src="/logo.png" width="40" height="40" style="border-radius: 50%; vertical-align: middle; margin: 6px 5px;">
+              <p style="display: inline-block; margin: 0;">username</p>
+            </div>
+            <div>
+              <i class="fas fa-ellipsis-v"></i>
+            </div>
+          </div>
+          <div class="card-header" style="padding: 0px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <img src="/logo.png" width="40" height="40" style="border-radius: 50%; vertical-align: middle; margin: 6px 5px;">
+              <p style="display: inline-block; margin: 0;">username</p>
+            </div>
+            <div>
+              <i class="fas fa-ellipsis-v"></i>
+            </div>
+          </div>
+          <div class="card-header" style="padding: 0px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <img src="/logo.png" width="40" height="40" style="border-radius: 50%; vertical-align: middle; margin: 6px 5px;">
+              <p style="display: inline-block; margin: 0;">username</p>
+            </div>
+            <div>
+              <i class="fas fa-ellipsis-v"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row ">
+      <div class="card" style="--bs-card-bg: #0000; --bs-card-border-color:#0000; position: relative;">
+        <div class="card-body " style="padding:2px; display: flex; flex-direction: column;">
+          <a class="terms-a mb-1" style="font-weight: semibold;">Terms & Conditions</a>
+          <a class="terms-a mb-1" style="font-weight: semibold;">Privacy</a>
+          <a class="terms-a mb-1" style="font-weight: semibold;">Contact us</a>
+          <a class="terms-a mb-1" style="font-weight: semibold;">Join us</a>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <div class="center">
+    <div class="pagination">
+      <li th:each="nav:${pageInfo.navigatepageNums}">
+        <a th:href="'/community?page='+${nav}" th:text="${nav}"></a>
+      </li>
+      <li class="pull-right ">
+        <a th:href="'/community?page='+${pageInfo.pages}">Last Page</a>
+      </li>
+    </div>
+  </div>
+
+</section>
+</body>
+</html>

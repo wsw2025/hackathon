@@ -33,7 +33,6 @@ public class IndexController {
         if (page == null || page <= 0) page = 1;
         int size = 8;
         PageHelper.startPage(page, size);
-
         List<Camp> camps = campMapper.getCamps();
         if(key!=null){
              System.out.println(key);

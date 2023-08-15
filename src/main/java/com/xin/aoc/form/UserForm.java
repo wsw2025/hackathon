@@ -8,18 +8,18 @@ import org.hibernate.validator.constraints.UniqueElements;
 
 @Data
 public class UserForm {
-    @Length(min = 2, max = 32, message = "username length must be 2-15 characters long")
-//    @UniqueElements(message = "username existed")
+    @Length(min = 2, max = 32, message = "username length must be 2-15 characters")
     private String userName;
 
-    @Length(min = 2, max = 32, message = "password length must be 2-15 characters long")
+    @Length(min = 2, max = 32, message = "password length must be 2-15 characters")
     private String password;
 
-    @Email(message="email not valid")
+    @Email(message="email invalid")
     private String email;
 
-    @Length(min = 2, max = 32, message = "password length must be 2-15 characters long")
+    @Length(min = 2, max = 32, message = "password length must be 2-15 characters")
     private String nickName;
+
 
     private String checkCode;
 }

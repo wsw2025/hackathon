@@ -1,4 +1,4 @@
-package com.xin.aoc.controller;
+package com.xin.aoc.controller.community;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -26,30 +26,28 @@ public class LikeController {
     @Autowired
     private CampMapper campMapper;
 
-    @PostMapping("/like")
+    @PostMapping("/user/like")
     public String like(@RequestBody Map<String, Object> payload,
                            HttpServletRequest request, Model model) {
         UserInfo user = (UserInfo)request.getSession().getAttribute("login_user");
         Integer value = (Integer) payload.get("value");
-        int discussionId = Integer.parseInt((String) payload.get("discussionId"));
-        int campId = (int) payload.get("campId");
-        if(user==null)  return "redirect:/camp/discussions?id="+ campId;
-
+        int postId = Integer.parseInt((String) payload.get("postId"));
+        if(user==null)  return "redirect:/community";
 
         Like like = new Like();
-        like.setDiscussionId(discussionId);
+        like.setPostId(postId);
         like.setUserId(user.getUserId());
 
         if(value==0) {
             //unlike
             likeMapper.unlike(like);
-            likeMapper.minusLikeCount(discussionId);
+            System.out.println("post id: " +  postId);
+            likeMapper.minusLikeCount(postId);
         }else{
             //like
             likeMapper.like(like);
-            likeMapper.addLikeCount(discussionId);
-
+            likeMapper.addLikeCount(postId);
         }
-        return "redirect:/camp/discussions?id="+ campId;
+        return "redirect:/community";
     }
 }

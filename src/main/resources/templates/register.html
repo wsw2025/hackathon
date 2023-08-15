@@ -1,19 +1,121 @@
+<!--<!DOCTYPE html>-->
+<!--<html th:replace="~{layout::layout(~{::title},~{::section})}">-->
+<!--<head>-->
+<!--  <title>Register</title>-->
+<!--</head>-->
+<!--<section th:if="${register_success != null}">-->
+<!--  <h1>Register Success!</h1>-->
+<!--</section>-->
+<!--<section class="col-md-8 mx-auto" style="max-width: 800px" th:if="${register_success == null}">-->
+
+<!--<form th:action="@{/register}" th:object="${obj}" method="post">-->
+
+<!--  <div class="row mb-3">-->
+<!--    <label class="col-sm-3 control-label" for="userName"  >username</label>-->
+<!--    <div class="col-sm-9">-->
+<!--      <input class="form-control" oninput="doCheckUsername()"-->
+<!--             type="text" th:field="*{userName}" id="userName"-->
+<!--             th:value="${userName}"-->
+<!--      />-->
+<!--    </div>-->
+<!--    <span id="labUserName" class="text-primary" style="display: none">username already exists</span>-->
+<!--    <span class="text-primary" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></span>-->
+<!--  </div>-->
+
+<!--  <div class="row mb-3">-->
+<!--    <label class="col-sm-3 control-label" for="nickName">nickname</label>-->
+<!--    <div class="col-sm-9">-->
+<!--      <input class="form-control" type="text" th:field="*{nickName}" />-->
+<!--    </div>-->
+<!--    <span class="text-primary" th:if="${#fields.hasErrors('nickName')}" th:errors="*{nickName}"></span>-->
+<!--  </div>-->
+
+<!--  <div class="row mb-3">-->
+<!--    <label class="col-sm-3 control-label" for="password">password</label>-->
+<!--    <div class="col-sm-9">-->
+<!--      <input class="form-control" type="password" th:field="*{password}" />-->
+<!--    </div>-->
+<!--    <span class="text-primary" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>-->
+<!--  </div>-->
+
+<!--  <div class="row mb-3">-->
+<!--    <label class="col-sm-3 control-label" for="email">email</label>-->
+<!--    <div class="col-sm-9">-->
+<!--      <input class="form-control" type="text" th:field="*{email}" />-->
+<!--    </div>-->
+<!--    <span class="text-primary" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>-->
+<!--  </div>-->
+
+<!--  <div class="row mb-3">-->
+<!--    <label class="col-sm-3 control-label" for="checkCode">Verification code</label>-->
+<!--    <div class="col-sm-4">-->
+<!--      <input class="form-control" type="text" value="" name="checkCode"/>-->
+<!--    </div>-->
+<!--    <div class="col-sm-5">-->
+<!--      <input type="button" class="btn btn-default" id="btnCheckCode"-->
+<!--              onclick="javascript:doCheckCode()" value="Get verification code" />-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--  <h1 th:text="${msg}"></h1>-->
+
+<!--  <div class="form-group mb-3">-->
+<!--    <button type="submit" class="btn btn-primary col-md-4" id="btnSubmit">Submit</button>-->
+<!--  </div>-->
+<!--</form>-->
+<!--</section>-->
+<!--</html>-->
+
+
+
+
 <!DOCTYPE html>
 <html th:replace="~{layout::layout(~{::title},~{::section})}">
 <head>
-  <title>Register</title>
+  <meta charset="UTF-8">
+  <!--  <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+  <title> Registration </title>
+  <style>
+.padded-tag {
+  padding: 5px; /* set your desired padding value */
+}
+ul.pagination {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+}
+
+ul.pagination li {display: inline;}
+
+ul.pagination li a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+    border: 1px solid #ddd;
+}
+
+ul.pagination li a.active {
+    background-color: #4CAF50;
+    color: white;
+    border: 1px solid #4CAF50;
+}
+
+ul.pagination li a:hover:not(.active) {background-color: #ddd;}
+
+div.center {text-align: center;}
+</style>
 </head>
-<section th:if="${register_success != null}">
-  <h1>Register Success!</h1>
-</section>
-<section class="col-md-8 mx-auto" style="max-width: 800px" th:if="${register_success == null}">
+<body>
+<section  class="col-md-4 mx-auto" >
   <script type="text/javascript" th:inline="javascript">
   function checkTime(left) {
     if (left <= 0) {
       $("#btnCheckCode").prop('value', 'Get verification code');
       $("#btnCheckCode").removeAttr('disabled');
     } else {
-      $("#btnCheckCode").prop('value', 'after ' + left + ' seconds');
+      $("#btnCheckCode").prop('value', 'after ' + left + ' s');
       $("#btnCheckCode").attr('disabled', true);
       setTimeout('checkTime('+(left-1)+')', 1000);
     }
@@ -49,60 +151,56 @@
 
 </script>
 
-<form th:action="@{/register}" th:object="${obj}" method="post">
+  <div class="login-wrapper">
+    <h2>Registration</h2>
+    <form th:action="@{/register}" th:object="${obj}" method="post">
 
-  <div class="row mb-3">
-    <label class="col-sm-3 control-label" for="userName"  >username</label>
-    <div class="col-sm-9">
-      <input class="form-control" oninput="doCheckUsername()"
-             type="text" th:field="*{userName}" id="userName"
-             th:value="${userName}"
-      />
-    </div>
-    <span id="labUserName" class="text-primary" style="display: none">username already exists</span>
-    <span class="text-primary" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></span>
+      <div class="input-box">
+          <input class="form-control" oninput="doCheckUsername()"
+                 type="text" th:field="*{userName}" id="userName"
+                 th:value="${userName}" placeholder="Enter your username"
+          required/>
+        <h3 id="labUserName" class="text-warning" style="display: none">username already exists</h3>
+        <h3 class="text-warning" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></h3>
+      </div>
+
+      <div class="input-box">
+        <input class="form-control" type="text" th:field="*{nickName}" placeholder="Enter your nickname" required/>
+        <h3 class="text-warning" th:if="${#fields.hasErrors('nickName')}" th:errors="*{nickName}"></h3>
+      </div>
+
+      <div class="input-box">
+        <input class="form-control" type="text" th:field="*{email}" placeholder="Enter your email" required/>
+        <h3 class="text-warning" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></h3>
+      </div>
+
+      <div class="input-box">
+          <input class="form-control" type="text" th:field="*{password}" placeholder="Enter your password" required/>
+        <h3 class="text-warning" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></h3>
+      </div>
+
+      <div class="input-box">
+        <input class="form-control" type="text" name="checkCode" value="" placeholder="Enter verification code" required style="display: inline-block; width: 65%; vertical-align: middle;">
+        <input type="button" class="btn btn-default" id="btnCheckCode" onclick="javascript:doCheckCode()" value="send" style="margin-right: 0px; display: inline-block; width: 33%; vertical-align: middle;">
+        <h3 class="text-warning" th:text="${msg}" style="display: block;"></h3>
+      </div>
+
+      <div class="policy">
+        <input type="checkbox" required>
+        <div class="text">
+        <h3 style="margin-bottom: 0rem">I accept all  <a href="/terms">terms & condition</a></h3>
+        </div>
+      </div>
+      <div class="input-box button">
+        <input type="Submit" value="Register Now">
+      </div>
+
+      <div class="text">
+        <h3>Already have an account? <a href="/login">Login now</a></h3>
+      </div>
+    </form>
   </div>
-
-  <div class="row mb-3">
-    <label class="col-sm-3 control-label" for="nickName">nickname</label>
-    <div class="col-sm-9">
-      <input class="form-control" type="text" th:field="*{nickName}" />
-    </div>
-    <span class="text-primary" th:if="${#fields.hasErrors('nickName')}" th:errors="*{nickName}"></span>
-  </div>
-
-  <div class="row mb-3">
-    <label class="col-sm-3 control-label" for="password">password</label>
-    <div class="col-sm-9">
-      <input class="form-control" type="password" th:field="*{password}" />
-    </div>
-    <span class="text-primary" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
-  </div>
-
-  <div class="row mb-3">
-    <label class="col-sm-3 control-label" for="email">email</label>
-    <div class="col-sm-9">
-      <input class="form-control" type="text" th:field="*{email}" />
-    </div>
-    <span class="text-primary" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
-  </div>
-
-  <div class="row mb-3">
-    <label class="col-sm-3 control-label" for="checkCode">Verification code</label>
-    <div class="col-sm-4">
-      <input class="form-control" type="text" value="" name="checkCode"/>
-    </div>
-    <div class="col-sm-5">
-      <input type="button" class="btn btn-default" id="btnCheckCode"
-              onclick="javascript:doCheckCode()" value="Get verification code" />
-    </div>
-  </div>
-
-  <h1 th:text="${msg}"></h1>
-
-  <div class="form-group mb-3">
-    <button type="submit" class="btn btn-primary col-md-4" id="btnSubmit">Submit</button>
-  </div>
-</form>
 </section>
+</body>
+
 </html>
