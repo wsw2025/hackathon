@@ -115,6 +115,12 @@ create table if not exists collects (
    post_id int not null
 );
 
+create table if not exists comments (
+   comment_id int auto_increment primary key,
+   user_id int not null,
+   post_id int not null
+);
+
 create table if not exists posts (
    post_id int auto_increment primary key,
    title varchar(64) not null,

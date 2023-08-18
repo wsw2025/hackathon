@@ -16,4 +16,5 @@ public class Post {
     private String username;
     private String userImage;
     private boolean liked;
+    private boolean collected;
 }

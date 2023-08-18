@@ -32,9 +32,9 @@ public interface PostMapper {
     List<Post> getPostsByKeyUserId(String key, int id);
 
     @Select("SELECT * FROM posts where post_id=#{postId}")
-    PostForm getPostById(int id);
+    Post getPostById(int id);
 
-    @Select("SELECT * FROM posts where user_id=#{id}")
+    @Select("SELECT * FROM posts where user_id=#{id} order by post_date desc")
     List<Post> getPostByUserId(int id);
 
     @Select("select * from posts " +

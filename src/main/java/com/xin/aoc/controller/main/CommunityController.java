@@ -3,6 +3,7 @@ package com.xin.aoc.controller.main;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xin.aoc.form.PostForm;
+import com.xin.aoc.mapper.CollectMapper;
 import com.xin.aoc.mapper.LikeMapper;
 import com.xin.aoc.mapper.PostMapper;
 import com.xin.aoc.mapper.UserInfoMapper;
@@ -36,7 +37,8 @@ public class CommunityController {
     private UserInfoMapper userInfoMapper;
     @Autowired
     private LikeMapper likeMapper;
-
+    @Autowired
+    private CollectMapper collectMapper;
 
     @GetMapping(value="/community")
     public String community(@RequestParam(required = false, defaultValue = "1", value = "page")
@@ -61,6 +63,11 @@ public class CommunityController {
                 p.setLiked(true);
             }else{
                 p.setLiked(false);
+            }
+            if(user!=null && collectMapper.checkExist(user.getUserId(),p.getPostId())!=0){
+                p.setCollected(true);
+            }else{
+                p.setCollected(false);
             }
         }
 

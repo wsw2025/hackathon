@@ -57,27 +57,98 @@
                             </div>
 
                             <div class="button-row">
-                                <button class="comment-button"><i class="fa fa-comment"></i> Comment</button>
+                                <button th:id="'comment-button-' + ${post.postId}" th:onclick="toggleCommentSection([[${post.postId}]])"><i class="fa fa-comment"></i> Comment</button>
 
-                                <div th:if="${post.liked}==true" style="display: flex; align-items: center; margin-right: 10px;">
+                                <div th:if="${post.liked}==true" style="display: flex; align-items: center; margin-right: 15px;">
                                     <span th:data-value="${post.postId}" class="like liked" style="margin-right: 4px;"><i class="fa fa-heart"></i></span>
                                     <p th:text="${post.likes}" style="margin: 0;"></p>
                                 </div>
-                                <div  th:if="${post.liked}==false" style="display: flex; align-items: center; margin-right: 10px;">
+                                <div  th:if="${post.liked}==false" style="display: flex; align-items: center; margin-right: 15px;">
                                     <span th:data-value="${post.postId}" class="like" style="margin-right: 4px;"><i class="fa fa-heart"></i></span>
                                     <p th:text="${post.likes}" style="margin: 0;"></p>
                                 </div>
 
-<!--                                <div th:if="${post.liked}==true" style="display: flex; align-items: center; margin-right: 10px;">-->
+                                <div th:if="${post.collected}==true" style="display: flex; align-items: center; margin-right: 10px;">
                                     <span th:data-value="${post.postId}" class="collect collected" style="margin-right: 4px;"><i class="fa fa-bookmark"></i></span>
-                                    <p text="Collect" style="margin: 0;"></p>
-<!--                                </div>-->
+                                    <p text="Collect" style="margin: 0;">Collect</p>
+                                </div>
 
-<!--                                <button class="collect-button"><i class="fa fa-bookmark"></i> Collect</button>-->
+                                <div  th:if="${post.collected}==false" style="display: flex; align-items: center; margin-right: 10px;">
+                                    <span th:data-value="${post.postId}" class="collect" style="margin-right: 4px;"><i class="fa fa-bookmark"></i></span>
+                                    <p text="Collect" style="margin: 0;">Collect</p>
+                                </div>
+
                                 <button  th:text="${post.postDate}" disabled>upload time</button>
                             </div>
 
+                            <div  th:id="'comment-section-' + ${post.postId}"  style="display: none;">
+                                <hr class="divider">
+                                <p>Comments</p>
+                                <div th:if="${session.login_user != null}">
+                                    <form th:action="@{/user/comment}" method="post">
+                                        <div class="comment-container" style="margin-bottom:10px">
+                                            <textarea name="content" class="form-control comment-textarea" th:id="'content-' + ${post.postId}" placeholder="Post comment here..." th:oninput="enableSubmit([[${post.postId}]])"></textarea>
+                                            <input type="hidden" name="id" th:value="${post.postId}">
+                                                <button type="submit" th:id="'submit-' + ${post.postId}" class="comment-button btn btn-primary" disabled>Submit</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div th:if="${session.login_user == null}">
+                                    <p style="color:#959595">Login to post comments!</p>
+                                </div>
+                                <div>
+                                    <div>
+                                    <img src="logo.png" width="30" height="30" style="border-radius: 50%; vertical-align: middle; margin: 6px 5px;">
+                                    <p style="color: #6c757d; font-size:16px; display: inline-block; margin: 0;">username</p>
+                                </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <p  style="margin-bottom: 0; margin-left: 5px; color: #6c757d; font-size:14px" >Some random comments</p>
+                                    </div>
+                                    <div>
+                                        <div  th:if="${post.liked}==false" style="display: flex; align-items: center; margin-right: 15px;">
+                                            <span th:data-value="${post.postId}" class="like" style="margin-right: 4px;"><i class="fa fa-heart"></i></span>
+                                            <p th:text="${post.likes}" style="margin: 0; color: #959595"></p>
+                                        </div>
+
+                                        <div th:if="${post.liked}==true" style="display: flex; align-items: center; margin-right: 10px;">
+                                            <span th:data-value="${post.postId}" class="collect collected" style="margin-right: 4px;"><i class="fa fa-bookmark"></i></span>
+                                            <p th:text="${post.likes}" style="margin: 0; color: #959595"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                    <hr class="divider">
+                                </div>
+
+
+                            </div>
+
                             <script type="text/javascript" th:inline="javascript">
+
+  function enableSubmit(postId) {
+  console.log(`!!!!content-${postId}`);
+  var input = document.getElementById(`content-${postId}`).value;
+  var submitBtn = document.getElementById(`submit-${postId}`);
+  if (input.trim() === '') {
+    submitBtn.setAttribute("disabled", "");
+  } else {
+    submitBtn.removeAttribute("disabled");
+  }
+}
+
+function toggleCommentSection(buttonId) {
+  const commentSection = document.getElementById(`comment-section-${buttonId}`);
+  const commentButton = document.getElementById(`comment-button-${buttonId}`);
+
+  if (commentSection.style.display === 'none') {
+    commentSection.style.display = 'block';
+    commentButton.innerHTML = '<i class="fa fa-arrow-up"></i> Collapse';
+  } else {
+    commentSection.style.display = 'none';
+    commentButton.innerHTML = '<i class="fa fa-comment"></i> Comment';
+  }
+}
+
 
 document.addEventListener('DOMContentLoaded', () => {
   const likeButtons = document.querySelectorAll('.like');
@@ -140,16 +211,36 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('You must be logged in to collect a post.');
         return;
       }
-
       if (collectButton.classList.contains('collected')) {
         //uncollect
         collectButton.classList.remove('collected');
         const value = 0;
+        fetch('/user/collect', {
+          method: 'POST',
+          body: JSON.stringify({
+            value,
+            postId,
+          }),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
       } else {
         collectButton.classList.add('collected');
         const value = 1;
+        fetch('/user/collect', {
+          method: 'POST',
+          body: JSON.stringify({
+            value,
+            postId,
+          }),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
        }
-<!--      location.reload();-->
+
+      location.reload();
     });
   });
 });
@@ -186,10 +277,12 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="button-text">Video</div>
                         </div>
 
-                        <div class="circle-button">
-                            <i class="fas fa-star button-icon"></i>
-                            <div class="button-text" style="white-space: nowrap;">Collection</div>
-                        </div>
+                        <a href="/user/collections">
+                            <div class="circle-button">
+                                <i class="fas fa-star button-icon"></i>
+                                <div class="button-text" style="white-space: nowrap;">Collection</div>
+                            </div>
+                        </a>
 
                         <a href="/user/posts">
                             <div class="circle-button">

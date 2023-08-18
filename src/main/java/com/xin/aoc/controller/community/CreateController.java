@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.xin.aoc.form.CampForm;
 import com.xin.aoc.form.PostForm;
 import com.xin.aoc.form.UserForm;
+import com.xin.aoc.mapper.CollectMapper;
 import com.xin.aoc.mapper.LikeMapper;
 import com.xin.aoc.mapper.PostMapper;
 import com.xin.aoc.mapper.UserInfoMapper;
@@ -45,7 +46,8 @@ public class CreateController {
     private UserInfoMapper userInfoMapper;
     @Autowired
     private LikeMapper likeMapper;
-
+    @Autowired
+    private CollectMapper collectMapper;
     @GetMapping(value="/user/write")
     public String community(
                             @ModelAttribute("PostForm") PostForm post
@@ -82,7 +84,7 @@ public class CreateController {
     public String editPst(@RequestParam(value="id") int id,
                          @ModelAttribute("PostForm") PostForm post,
                           Model model, HttpServletRequest request){
-        PostForm old = postMapper.getPostById(id);
+        Post old = postMapper.getPostById(id);
         logger.info("!!!!" + old.getTitle());
         post.setPostId(old.getPostId());
         post.setContent(old.getContent());
@@ -143,6 +145,11 @@ public class CreateController {
                 p.setLiked(true);
             }else{
                 p.setLiked(false);
+            }
+            if(user!=null && collectMapper.checkExist(user.getUserId(),p.getPostId())!=0){
+                p.setCollected(true);
+            }else{
+                p.setCollected(false);
             }
         }
 
