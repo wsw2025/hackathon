@@ -3,6 +3,8 @@ package com.xin.aoc.model;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
+import java.util.List;
+
 @Data
 public class Post {
     private int postId;
@@ -17,4 +19,7 @@ public class Post {
     private String userImage;
     private boolean liked;
     private boolean collected;
+    private List<Comment> comments;
+    private List<String> images;
+
 }

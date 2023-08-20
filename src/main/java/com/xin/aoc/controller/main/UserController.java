@@ -235,7 +235,6 @@ public class UserController {
         File folder = new File(UPLOADED_FOLDER);
         if (!folder.exists())
             folder.mkdirs();
-
         String originalFilename = file.getOriginalFilename();
         int dotIndex = originalFilename.lastIndexOf(".");
 
@@ -245,6 +244,7 @@ public class UserController {
         if (newFile.exists()) {
             newFile.delete();
         }
+
         try {
             byte[] bytes = file.getBytes();
             String url = "/images/" + user.getUserId() + fileExtension+"?t="+System.currentTimeMillis();

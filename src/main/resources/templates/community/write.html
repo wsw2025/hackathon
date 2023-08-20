@@ -6,20 +6,56 @@
 </head>
 <body>
 <section  class=" mx-auto" >
+  <script>
+function validateFileSize(event) {
+  const fileInput = document.getElementById('image-input');
+  const maxFileSize = 1048576; // Maximum file size in bytes
 
-  <form th:action="@{/user/write}" th:object="${PostForm}" method="post">
+  for (let i = 0; i < fileInput.files.length; i++) {
+    const fileSize = fileInput.files[i].size;
+    if (fileSize > maxFileSize) {
+      event.preventDefault(); // Prevent form submission
+      alert('File size exceeds the maximum limit of 1MB.'); // Display alert
+      return;
+    }
+  }
+}
+</script>
+  <form th:action="@{/user/write}" onsubmit="validateFileSize(event)" th:object="${PostForm}" method="post" enctype="multipart/form-data">
 
 
     <div class="post-upload">
       <h3  style="color:#7f95ff"th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></h3>
       <h3 style="color:#7f95ff" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></h3>
       <h2 style="color:#7f95ff" th:text="${write_msg}"></h2>
-
       <input id="title" name="title" type="text" class="post-title" placeholder="Enter post title (max 100 char)">
       <textarea id="content" name="content" oninput="countWord()"  class="post-content"  placeholder="Enter post content">
       </textarea>
-
     </div>
+
+    <div class="image-box">
+      <h3 style="margin-left:0px; margin-bottom:15px; font-size:18px">Upload Images</h3>
+      <input type="file" id="image-input" name="images" multiple>
+      <ul id="image-list"></ul>
+    </div>
+
+    <script>
+    const imageInput = document.getElementById('image-input');
+    const imageList = document.getElementById('image-list');
+
+    imageInput.addEventListener('change', handleImageUpload);
+
+    function handleImageUpload(event) {
+      const fileList = event.target.files;
+      imageList.innerHTML = '';
+
+      for (let i = 0; i < fileList.length; i++) {
+        const listItem = document.createElement('li');
+        listItem.textContent = fileList[i].name;
+        imageList.appendChild(listItem);
+      }
+    }
+  </script>
 
     <div class="bottom-bar">
       <button class="btn btn-outline-primary me-3" onclick="backToTop(event)">Back to Top</button>

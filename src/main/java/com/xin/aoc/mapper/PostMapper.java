@@ -2,16 +2,14 @@ package com.xin.aoc.mapper;
 
 import com.xin.aoc.form.PostForm;
 import com.xin.aoc.model.Post;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
 public interface PostMapper {
     @Insert("insert into posts (title, content, post_date, likes, image, video, user_id) " +
             "values (#{title},#{content},#{postDate},#{likes},#{image},#{video},#{userId})")
+    @Options(useGeneratedKeys = true, keyProperty = "postId")
     boolean insert(PostForm post);
 
     @Select("SELECT * FROM posts" +
@@ -48,4 +46,9 @@ public interface PostMapper {
     @Update("update posts set content=#{content}, title=#{title}, post_date=#{postDate} " +
             "where post_id=#{postId}")
     boolean update(PostForm post);
+
+
+    @Update("update posts set image=#{size} " +
+            "where post_id=#{postId}")
+    void addImg(int postId, int size);
 }

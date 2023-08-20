@@ -8,6 +8,7 @@
 <body >
 <!--</header>-->
 <section >
+    <p style="color:yellow" th:text="${posted}"></p>
 
     <div class="card-left card-column">
         <div class="row " th:if="${pageInfo}!=null" th:each="post : ${pageInfo.list}">
@@ -46,15 +47,19 @@
                         </div>
 
                         <div class="card-body mt-1" style="display: flex; flex-direction: column;">
-                            <div class="mb-2" style="display: flex; margin-top: 2px; margin-left:5px">
-                                <h3  th:text="${post.title}"><a href="#"></a></h3>
-                                <div  style="margin-left:10px">
-                                </div>
+                            <div class="mb-2" style="display: flex; margin-top: 2px; margin-left: 5px;">
+                                <h3 th:text="${post.title}"><a href="#"></a></h3>
+                                <div style="margin-left: 10px;"></div>
                             </div>
-
                             <div style="display: flex; margin-left: 5px; width: 865px;">
                                 <p th:text="${post.content}" style="flex: 1;"><a href="#"></a></p>
                             </div>
+                            <div th:if="${post.image}>0" style="display: flex; flex-wrap: wrap; margin-left: 5px;">
+                                <div class="image-container" th:each="image, iterStat : ${post.images}">
+                                    <img class="image" th:src="${image}" alt="Image">
+                                </div>
+                            </div>
+
 
                             <div class="button-row">
                                 <button th:id="'comment-button-' + ${post.postId}" th:onclick="toggleCommentSection([[${post.postId}]])"><i class="fa fa-comment"></i> Comment</button>
@@ -73,22 +78,23 @@
                                     <p text="Collect" style="margin: 0;">Collect</p>
                                 </div>
 
-                                <div  th:if="${post.collected}==false" style="display: flex; align-items: center; margin-right: 10px;">
+                                <div  th:if="${post.collected}==false" style="display: flex; align-items: center; margin-right: 15px;">
                                     <span th:data-value="${post.postId}" class="collect" style="margin-right: 4px;"><i class="fa fa-bookmark"></i></span>
                                     <p text="Collect" style="margin: 0;">Collect</p>
                                 </div>
-
-                                <button  th:text="${post.postDate}" disabled>upload time</button>
+                                <div  style="display: flex; align-items: center; margin-right: 10px;">
+                                    <p  style="margin: 0;" th:text="${post.postDate}" >upload time</p>
+                                </div>
                             </div>
 
-                            <div  th:id="'comment-section-' + ${post.postId}"  style="display: none;">
+                            <div th:id="'comment-section-' + ${post.postId}"  style="display: none;">
                                 <hr class="divider">
                                 <p>Comments</p>
                                 <div th:if="${session.login_user != null}">
                                     <form th:action="@{/user/comment}" method="post">
                                         <div class="comment-container" style="margin-bottom:10px">
                                             <textarea name="content" class="form-control comment-textarea" th:id="'content-' + ${post.postId}" placeholder="Post comment here..." th:oninput="enableSubmit([[${post.postId}]])"></textarea>
-                                            <input type="hidden" name="id" th:value="${post.postId}">
+                                            <input type="hidden" name="id" id="id" th:value="${post.postId}">
                                                 <button type="submit" th:id="'submit-' + ${post.postId}" class="comment-button btn btn-primary" disabled>Submit</button>
                                         </div>
                                     </form>
@@ -96,27 +102,34 @@
                                 <div th:if="${session.login_user == null}">
                                     <p style="color:#959595">Login to post comments!</p>
                                 </div>
-                                <div>
-                                    <div>
-                                    <img src="logo.png" width="30" height="30" style="border-radius: 50%; vertical-align: middle; margin: 6px 5px;">
-                                    <p style="color: #6c757d; font-size:16px; display: inline-block; margin: 0;">username</p>
-                                </div>
+
+                                <div th:if="${post.comments}!=null" th:each="comment : ${post.comments}">
                                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <div>
-                                        <p  style="margin-bottom: 0; margin-left: 5px; color: #6c757d; font-size:14px" >Some random comments</p>
+                                        <div style="display: flex; align-items: center;">
+                                            <img th:src="${comment.userImage}" width="30" height="30" style="border-radius: 50%; vertical-align: middle; margin: 6px 5px;">
+                                            <p th:text="${comment.username}" style="color: #6c757d; font-size:16px; display: inline-block; margin: 0;"></p>
+                                        </div>
+                                        <div>
+                                            <p  style="color: #6c757d; font-size:14px; display: inline-block; margin-right: 10px;margin-top: 10px;" th:text="${comment.postDate}" ></p>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <div  th:if="${post.liked}==false" style="display: flex; align-items: center; margin-right: 15px;">
-                                            <span th:data-value="${post.postId}" class="like" style="margin-right: 4px;"><i class="fa fa-heart"></i></span>
-                                            <p th:text="${post.likes}" style="margin: 0; color: #959595"></p>
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <div style="display: flex; align-items: center;">
+                                        <p th:text="${comment.content}" style="margin-bottom: 0px;margin-top:2px; margin-left:10px; color: #6c757d; font-size:16px" >Some random comments</p>
                                         </div>
 
-                                        <div th:if="${post.liked}==true" style="display: flex; align-items: center; margin-right: 10px;">
-                                            <span th:data-value="${post.postId}" class="collect collected" style="margin-right: 4px;"><i class="fa fa-bookmark"></i></span>
-                                            <p th:text="${post.likes}" style="margin: 0; color: #959595"></p>
+                                        <div  th:if="${comment.liked}==false" style="display: flex; align-items: center; margin-right: 15px;">
+                                            <span th:data-value="${comment.commentId}" class="comment-like" style="margin-right: 4px;"><i class="fa fa-heart"></i></span>
+                                            <p th:text="${comment.likes}" style="margin-bottom: 0; color: #959595; font-size:14px"></p>
                                         </div>
+
+                                        <div th:if="${comment.liked}==true" style="display: flex; align-items: center; margin-right: 10px;">
+                                            <span th:data-value="${comment.commentId}" class="comment-like comment-liked" style="margin-right: 4px;"><i class="fa fa-heart"></i></span>
+                                            <p th:text="${comment.likes}" style="margin-bottom: 0; color: #959595; font-size:14px"></p>
+                                        </div>
+
                                     </div>
-                                </div>
+
                                     <hr class="divider">
                                 </div>
 
@@ -148,6 +161,51 @@ function toggleCommentSection(buttonId) {
     commentButton.innerHTML = '<i class="fa fa-comment"></i> Comment';
   }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  const likeButtons = document.querySelectorAll('.comment-like');
+  likeButtons.forEach((likeButton) => {
+   likeButton.addEventListener('click', () => {
+      const commentId = likeButton.getAttribute('data-value');
+      const user = /*[[${session.login_user}]]*/;
+      if (user == null) {
+        console.log('null');
+        alert('You must be logged in to like a post.');
+        return;
+      }
+
+      if (likeButton.classList.contains('comment-liked')) {
+        //unlike
+        likeButton.classList.remove('comment-liked');
+        const value = 0;
+        fetch('/user/comment_like', {
+          method: 'POST',
+          body: JSON.stringify({
+            value,
+            commentId,
+          }),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+      } else {
+        likeButton.classList.add('comment-liked');
+        const value = 1;
+        fetch('/user/comment_like', {
+          method: 'POST',
+          body: JSON.stringify({
+            value,
+            commentId,
+          }),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+       }
+      location.reload();
+    });
+  });
+});
 
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
@@ -30,11 +31,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class CreateController {
@@ -55,26 +63,68 @@ public class CreateController {
         return "community/write";
     }
 
+    private void handleImageUpload(List<MultipartFile> uploadedFiles, int postId) {
+        String UPLOADED_FOLDER = "./post_images/";
+        File folder = new File(UPLOADED_FOLDER);
+        if (!folder.exists())
+            folder.mkdirs();
+        int index=0;
+        for (MultipartFile file : uploadedFiles) {
+            if (!file.isEmpty()) {
+                // Process the image file
+                String originalFilename = file.getOriginalFilename();
+                int dotIndex = originalFilename.lastIndexOf(".");
+                String fileExtension = originalFilename.substring(dotIndex);
+                File newFile = new File(folder, postId + "_" + index + fileExtension);
+
+                if (newFile.exists()) {
+                    newFile.delete();
+                }
+                try {
+                    byte[] bytes = file.getBytes();
+                    String url = "/post_images/" + postId + "_" + index + fileExtension + "?t=" + System.currentTimeMillis();
+                    Files.write(newFile.toPath(), bytes);
+                    index++;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                logger.info(originalFilename+"profile_pic name");
+            }
+        }
+    }
     @PostMapping(value="/user/write")
     public String communitywrite(@ModelAttribute("PostForm") @Validated PostForm post,
-                                 BindingResult rs, HttpServletRequest request, Model model){
+                                 BindingResult rs, MultipartHttpServletRequest request, Model model){
+
         if (rs.hasErrors()) {
             for (ObjectError error : rs.getAllErrors()) {
                 System.out.println(error.getDefaultMessage());
             }
             return "community/write";
         }
+
         //set time, userid
+        UserInfo user = (UserInfo)request.getSession().getAttribute("login_user");
         LocalDate date = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yy");
         String formattedDate = date.format(formatter);;
         post.setPostDate(formattedDate);
-
-        UserInfo user = (UserInfo)request.getSession().getAttribute("login_user");
         post.setUserId(user.getUserId());
 
         //add post to database;
         postMapper.insert(post);
+        int postId = post.getPostId();
+        logger.info("new post id:"+ postId);
+
+        MultiValueMap<String, MultipartFile> fileMap = request.getMultiFileMap();
+        List<MultipartFile> uploadedFiles = fileMap.get("images");
+        logger.info(uploadedFiles.size() + " <-- number of images");
+
+        if (uploadedFiles != null && !uploadedFiles.isEmpty() && !uploadedFiles.get(0).isEmpty()) {
+            logger.info("image files not null!");
+            postMapper.addImg(postId, uploadedFiles.size());
+            handleImageUpload(uploadedFiles, postId);
+        }
 
         model.addAttribute("write_msg", "Uploading succeeded!");
         return "community/write";

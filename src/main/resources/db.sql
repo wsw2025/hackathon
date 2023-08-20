@@ -109,6 +109,12 @@ create table if not exists likes (
    post_id int not null
 );
 
+create table if not exists comment_likes (
+   comment_like_id int auto_increment primary key,
+   user_id int not null,
+   comment_id int not null
+);
+
 create table if not exists collects (
    collect_id int auto_increment primary key,
    user_id int not null,
@@ -118,7 +124,10 @@ create table if not exists collects (
 create table if not exists comments (
    comment_id int auto_increment primary key,
    user_id int not null,
-   post_id int not null
+   post_id int not null,
+   likes int default (0),
+   content varchar(10000) not null,
+   post_date varchar(64) not null
 );
 
 create table if not exists posts (

@@ -33,21 +33,21 @@ public class CollectController {
         UserInfo user = (UserInfo)request.getSession().getAttribute("login_user");
         Integer value = (Integer) payload.get("value");
         int postId = Integer.parseInt((String) payload.get("postId"));
-        if(user==null)  return "redirect:/community";
 
         Collect collect = new Collect();
         collect.setPostId(postId);
         collect.setUserId(user.getUserId());
 
+        System.out.println("post: user/collect");
+
         if(value==0) {
             //uncollect
             collectMapper.uncollect(collect);
-            System.out.println("post id: " +  postId);
+            System.out.println("post id: " +  postId + " uncollect");
         }else{
             //collect
             collectMapper.collect(collect);
-            System.out.println("collecting: " +  postId);
-
+            System.out.println("collecting: " +  postId +" collect");
         }
         return "redirect:/community";
     }

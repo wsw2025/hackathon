@@ -154,6 +154,16 @@ a:active {
   color: pink;
 }
 
+.comment-like i {
+  color: #959595;
+  font-size:14px
+}
+
+.comment-like.comment-liked i {
+  color: pink;
+  font-size:14px
+}
+
 .collect i {
   color: #959595;
 }
@@ -383,7 +393,20 @@ form .text h3 a:hover{
 </style>
 
 <!--    community cards, buttons, ads-->
+
     <style>
+    .image-container {
+        flex-basis: calc(25% - 10px);
+        flex-grow: 1;
+        margin-right: 10px;
+        margin-bottom: 10px;
+    }
+
+    .image {
+        max-width: 100%;
+        max-height: 100%;
+    }
+
 .discover-friends{
 height:50px;
 }
@@ -568,7 +591,13 @@ background-color:#ffffff08
 </style>
 <!--write box-->
     <style>
+ .image-box {
+      border: 1px dashed #ccc;
+      padding: 20px;
+       width: 865px;
+         margin: 0 auto;
 
+    }
 
 .post-upload {
   width: 865px;

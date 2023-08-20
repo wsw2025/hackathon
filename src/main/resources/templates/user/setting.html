@@ -84,7 +84,23 @@ div.center {text-align: center;}
 
     <div class="login-wrapper">
     <h2>Setting</h2>
-    <form th:action="@{/user/setting}" method="post" enctype="multipart/form-data">
+        <script>
+function validateFileSize(event) {
+  const fileInput = document.getElementById('image-input');
+  const maxFileSize = 1048576; // Maximum file size in bytes
+
+  for (let i = 0; i < fileInput.files.length; i++) {
+    const fileSize = fileInput.files[i].size;
+    if (fileSize > maxFileSize) {
+      event.preventDefault(); // Prevent form submission
+      alert('File size exceeds the maximum limit of 1MB.'); // Display alert
+      return;
+    }
+  }
+}
+</script>
+
+        <form onsubmit="validateFileSize(event)" th:action="@{/user/setting}" method="post" enctype="multipart/form-data">
             <div style="text-align: center;">
                 <label for="file">
                     <input type="file" name="file" id="file" style="display:none;" accept="image/png, image/jpeg" multiple/>

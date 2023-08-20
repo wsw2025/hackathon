@@ -7,14 +7,21 @@
 <body>
 <section  class=" mx-auto" >
 
-  <form th:action="@{'/user/edit?id=' + ${postId}}" th:object="${PostForm}" method="post">
-    <div class="post-upload">
+  <form th:action="@{'/user/edit?id=' + ${postId}}" th:object="${PostForm}" method="post" enctype="multipart/form-data">
+
+  <div class="post-upload">
       <h3  style="color:#7f95ff"th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></h3>
       <h3 style="color:#7f95ff" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></h3>
       <h2 style="color:#7f95ff" th:text="${edit_msg}"></h2>
 
       <input th:field="*{title}" id="title" name="title" type="text" class="post-title" placeholder="Enter post title (max 100 char)">
       <textarea th:field="*{content}" id="content" name="content" oninput="countWord()" class="post-content" placeholder="Enter post content"></textarea>
+    </div>
+
+    <div class="image-box">
+      <h3 style="margin-left:0px; margin-bottom:15px; font-size:18px">Upload Images</h3>
+      <input type="file" id="image-input" name="images" multiple>
+      <ul id="image-list"></ul>
     </div>
 
     <div class="bottom-bar">
