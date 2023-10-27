@@ -12,5 +12,6 @@ public class ResourceConfig implements WebMvcConfigurer {
                 .addResourceLocations("file:./images/");
         registry.addResourceHandler("/post_images/**")
                 .addResourceLocations("file:./post_images/");
+
     }
 }

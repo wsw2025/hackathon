@@ -8,9 +8,9 @@ spring:
 
   datasource:
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:file:./milkipedia
-    username: milkipedia
-    password: milkipedia
+    url: jdbc:h2:file:./summeray
+    username: summeray
+    password: summeray
 
   sql:
     init:

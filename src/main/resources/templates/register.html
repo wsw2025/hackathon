@@ -1,206 +1,85 @@
-<!--<!DOCTYPE html>-->
-<!--<html th:replace="~{layout::layout(~{::title},~{::section})}">-->
-<!--<head>-->
-<!--  <title>Register</title>-->
-<!--</head>-->
-<!--<section th:if="${register_success != null}">-->
-<!--  <h1>Register Success!</h1>-->
-<!--</section>-->
-<!--<section class="col-md-8 mx-auto" style="max-width: 800px" th:if="${register_success == null}">-->
+﻿<!DOCTYPE html>
+<html lang="en">
 
-<!--<form th:action="@{/register}" th:object="${obj}" method="post">-->
-
-<!--  <div class="row mb-3">-->
-<!--    <label class="col-sm-3 control-label" for="userName"  >username</label>-->
-<!--    <div class="col-sm-9">-->
-<!--      <input class="form-control" oninput="doCheckUsername()"-->
-<!--             type="text" th:field="*{userName}" id="userName"-->
-<!--             th:value="${userName}"-->
-<!--      />-->
-<!--    </div>-->
-<!--    <span id="labUserName" class="text-primary" style="display: none">username already exists</span>-->
-<!--    <span class="text-primary" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></span>-->
-<!--  </div>-->
-
-<!--  <div class="row mb-3">-->
-<!--    <label class="col-sm-3 control-label" for="nickName">nickname</label>-->
-<!--    <div class="col-sm-9">-->
-<!--      <input class="form-control" type="text" th:field="*{nickName}" />-->
-<!--    </div>-->
-<!--    <span class="text-primary" th:if="${#fields.hasErrors('nickName')}" th:errors="*{nickName}"></span>-->
-<!--  </div>-->
-
-<!--  <div class="row mb-3">-->
-<!--    <label class="col-sm-3 control-label" for="password">password</label>-->
-<!--    <div class="col-sm-9">-->
-<!--      <input class="form-control" type="password" th:field="*{password}" />-->
-<!--    </div>-->
-<!--    <span class="text-primary" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>-->
-<!--  </div>-->
-
-<!--  <div class="row mb-3">-->
-<!--    <label class="col-sm-3 control-label" for="email">email</label>-->
-<!--    <div class="col-sm-9">-->
-<!--      <input class="form-control" type="text" th:field="*{email}" />-->
-<!--    </div>-->
-<!--    <span class="text-primary" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>-->
-<!--  </div>-->
-
-<!--  <div class="row mb-3">-->
-<!--    <label class="col-sm-3 control-label" for="checkCode">Verification code</label>-->
-<!--    <div class="col-sm-4">-->
-<!--      <input class="form-control" type="text" value="" name="checkCode"/>-->
-<!--    </div>-->
-<!--    <div class="col-sm-5">-->
-<!--      <input type="button" class="btn btn-default" id="btnCheckCode"-->
-<!--              onclick="javascript:doCheckCode()" value="Get verification code" />-->
-<!--    </div>-->
-<!--  </div>-->
-
-<!--  <h1 th:text="${msg}"></h1>-->
-
-<!--  <div class="form-group mb-3">-->
-<!--    <button type="submit" class="btn btn-primary col-md-4" id="btnSubmit">Submit</button>-->
-<!--  </div>-->
-<!--</form>-->
-<!--</section>-->
-<!--</html>-->
-
-
-
-
-<!DOCTYPE html>
-<html th:replace="~{layout::layout(~{::title},~{::section})}">
 <head>
-  <meta charset="UTF-8">
-  <!--  <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
-  <title> Registration </title>
-  <style>
-.padded-tag {
-  padding: 5px; /* set your desired padding value */
-}
-ul.pagination {
-    display: inline-block;
-    padding: 0;
-    margin: 0;
-}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="VANNO - Premium directory consumer reviews and listings template by Ansonika">
+    <meta name="author" content="Ansonika">
+    <title>VANNO | Premium directory consumer reviews and listings template by Ansonika. - SHARED ON BOOTSTRAPMB.COM</title>
 
-ul.pagination li {display: inline;}
+    <!-- Favicons-->
+    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" type="image/x-icon" href="img/apple-touch-icon-57x57-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="72x72" href="img/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="114x114" href="img/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="144x144" href="img/apple-touch-icon-144x144-precomposed.png">
 
-ul.pagination li a {
-    color: black;
-    float: left;
-    padding: 8px 16px;
-    text-decoration: none;
-    transition: background-color .3s;
-    border: 1px solid #ddd;
-}
+    <!-- GOOGLE WEB FONT -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
 
-ul.pagination li a.active {
-    background-color: #4CAF50;
-    color: white;
-    border: 1px solid #4CAF50;
-}
+    <!-- BASE CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+	<link href="css/vendors.css" rel="stylesheet">
 
-ul.pagination li a:hover:not(.active) {background-color: #ddd;}
-
-div.center {text-align: center;}
-</style>
+    <!-- YOUR CUSTOM CSS -->
+    <link href="css/custom.css" rel="stylesheet">
+	
 </head>
-<body>
-<section  class="col-md-4 mx-auto" >
-  <script type="text/javascript" th:inline="javascript">
-  function checkTime(left) {
-    if (left <= 0) {
-      $("#btnCheckCode").prop('value', 'Get verification code');
-      $("#btnCheckCode").removeAttr('disabled');
-    } else {
-      $("#btnCheckCode").prop('value', 'after ' + left + ' s');
-      $("#btnCheckCode").attr('disabled', true);
-      setTimeout('checkTime('+(left-1)+')', 1000);
-    }
-  }
-  function doCheckCode() {
-    var load_url = "/get_check_code";
-    var code = $("#email").val();
-    $.post(load_url, {email: code}, function(data) {
-      if (data == "ok") {
-        checkTime(60);
-      } else {
-        alert("Error:" + data);
-      }
-    });
-  }
-  function doCheckUsername() {
-    var original = /*[[${username}]]*/ 'Unknown';
-    var load_url = "/check_username_register";
-    var userName = $("#userName").val();
 
-    $.post(load_url, {userName: userName}, function(data) {
-      if (data == "ok") {
-        $("#labUserName").hide();
-        $("#btnSubmit").removeAttr('disabled');
-      } else {
-        $("#labUserName").show();
-        $("#btnSubmit").attr('disabled', true);
-      }
-    });
-  }
-
-
-
-</script>
-
-  <div class="login-wrapper">
-    <h2>Registration</h2>
-    <form th:action="@{/register}" th:object="${obj}" method="post">
-
-      <div class="input-box">
-          <input class="form-control" oninput="doCheckUsername()"
-                 type="text" th:field="*{userName}" id="userName"
-                 th:value="${userName}" placeholder="Enter your username"
-          required/>
-        <h3 id="labUserName" class="text-warning" style="display: none">username already exists</h3>
-        <h3 class="text-warning" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></h3>
-      </div>
-
-      <div class="input-box">
-        <input class="form-control" type="text" th:field="*{nickName}" placeholder="Enter your nickname" required/>
-        <h3 class="text-warning" th:if="${#fields.hasErrors('nickName')}" th:errors="*{nickName}"></h3>
-      </div>
-
-      <div class="input-box">
-        <input class="form-control" type="text" th:field="*{email}" placeholder="Enter your email" required/>
-        <h3 class="text-warning" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></h3>
-      </div>
-
-      <div class="input-box">
-          <input class="form-control" type="text" th:field="*{password}" placeholder="Enter your password" required/>
-        <h3 class="text-warning" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></h3>
-      </div>
-
-      <div class="input-box">
-        <input class="form-control" type="text" name="checkCode" value="" placeholder="Enter verification code" required style="display: inline-block; width: 65%; vertical-align: middle;">
-        <input type="button" class="btn btn-default" id="btnCheckCode" onclick="javascript:doCheckCode()" value="send" style="margin-right: 0px; display: inline-block; width: 33%; vertical-align: middle;">
-        <h3 class="text-warning" th:text="${msg}" style="display: block;"></h3>
-      </div>
-
-      <div class="policy">
-        <input type="checkbox" required>
-        <div class="text">
-        <h3 style="margin-bottom: 0rem">I accept all  <a href="/terms">terms & condition</a></h3>
-        </div>
-      </div>
-      <div class="input-box button">
-        <input type="Submit" value="Register Now">
-      </div>
-
-      <div class="text">
-        <h3>Already have an account? <a href="/login">Login now</a></h3>
-      </div>
-    </form>
-  </div>
-</section>
+<body id="register_bg">
+	
+	<nav id="menu" class="fake_menu"></nav>
+	
+	<div id="login">
+		<aside>
+			<figure>
+				<a href="index.html"><img src="img/logo_sticky.svg" width="140" height="35" alt="" class="logo_sticky"></a>
+			</figure>
+			<div class="access_social">
+					<a href="#0" class="social_bt facebook">Register with Facebook</a>
+					<a href="#0" class="social_bt google">Register with Google</a>
+				</div>
+            <div class="divider"><span>Or</span></div>
+			<form autocomplete="off">
+				<div class="form-group">
+					<input class="form-control" type="text" placeholder="Name">
+					<i class="ti-user"></i>
+				</div>
+				<div class="form-group">
+					<input class="form-control" type="text" placeholder="Last Name">
+					<i class="ti-user"></i>
+				</div>
+				<div class="form-group">
+					<input class="form-control" type="email" placeholder="Email">
+					<i class="icon_mail_alt"></i>
+				</div>
+				<div class="form-group">
+					<input class="form-control" type="password" id="password1" placeholder="Password">
+					<i class="icon_lock_alt"></i>
+				</div>
+				<div class="form-group">
+					<input class="form-control" type="password" id="password2" placeholder="Confirm Password">
+					<i class="icon_lock_alt"></i>
+				</div>
+				<div id="pass-info" class="clearfix"></div>
+				<a href="#0" class="btn_1 rounded full-width">Register Now!</a>
+				<div class="text-center add_top_10">Already have an acccount? <strong><a href="login.html">Sign In</a></strong></div>
+			</form>
+			<div class="copy">© 2018 Vanno</div>
+		</aside>
+	</div>
+	<!-- /login -->
+	
+	<!-- COMMON SCRIPTS -->
+    <script src="js/common_scripts.js"></script>
+	<script src="js/functions.js"></script>
+	<script src="assets/validate.js"></script>
+	
+	<!-- SPECIFIC SCRIPTS -->
+	<script src="js/pw_strenght.js"></script>	
+  
 </body>
-
 </html>
