@@ -30,6 +30,6 @@ public class IndexController {
 
     @GetMapping(value = "/")
     public String index(Model model, HttpServletRequest request) {
-        return "core/index";
+        return "index";
     }
 }
