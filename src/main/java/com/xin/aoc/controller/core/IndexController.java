@@ -32,4 +32,25 @@ public class IndexController {
     public String index(Model model, HttpServletRequest request) {
         return "index";
     }
+    @GetMapping(value = "/hackathon")
+    public String hackathon(Model model, HttpServletRequest request) {
+        return "hackathon";
+    }
+
+    @GetMapping(value = "/faq")
+    public String faq(Model model, HttpServletRequest request) {
+        return "faq";
+    }
+
+    @GetMapping(value = "/prizes")
+    public String prizes(Model model, HttpServletRequest request) {
+        return "prizes";
+    }
+
+    @GetMapping(value = "/eligibility")
+    public String eligibility(Model model, HttpServletRequest request) {
+        return "eligibility";
+    }
+
+
 }
