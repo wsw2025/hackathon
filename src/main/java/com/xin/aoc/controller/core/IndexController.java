@@ -52,6 +52,21 @@ public class IndexController {
         return "eligibility";
     }
 
+    @GetMapping(value = "/cca")
+    public String cca(Model model, HttpServletRequest request) {
+        return "CCA";
+    }
+    @GetMapping(value = "/resources")
+    public String resources(Model model, HttpServletRequest request) {
+        return "resources";
+    }
+
+    @GetMapping(value = "/team")
+    public String team(Model model, HttpServletRequest request) {
+        return "team";
+    }
+
+
 
 
 }
