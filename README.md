@@ -9,7 +9,10 @@ Type in localhost:8080 in your browser (you can change the port by editing src/m
 ### How to edit the frontend: ###
 Please go to src/main/resources/templates and edit/add html files.
 
-### How to set up a local database: ###
+### How to edit the backend: ###
+Please go to src/main/java/com/xin/aoc/controller/core/IndexController.java
+
+### How to set up a local database (if needed): ###
 Please go to src/main/resources/application.yml
 
 ### Potential issues ###
