@@ -6,25 +6,6 @@ spring:
       content-type: text/html
     cache: false
 
-
-
-  datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:file:./ccland
-    username: ccland
-    password: ccland
-
-  sql:
-    init:
-      mode: always
-      schema-locations: classpath:db.sql
-
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-
-
 logging:
   level:
     com:
@@ -35,4 +16,4 @@ mybatis:
     map-underscore-to-camel-case: true
 
 server:
-  port: 1010
+  port: 8080

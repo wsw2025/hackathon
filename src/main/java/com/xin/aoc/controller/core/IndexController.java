@@ -1,68 +1,49 @@
 package com.xin.aoc.controller.core;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import com.xin.aoc.model.Camp;
-import com.xin.aoc.model.UserInfo;
+
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-//import com.xin.aoc.mapper.CampMapper;
-import com.xin.aoc.model.Camp;
-import com.xin.aoc.model.UserInfo;
-//import com.xin.aoc.service.UserInfoService;
-import org.springframework.beans.factory.annotation.Autowired;
+import net.sf.jsqlparser.Model;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.List;
-
 
 @Controller
 public class IndexController {
 
     @GetMapping(value = "/")
-    public String index(Model model, HttpServletRequest request) {
+    public String index(HttpServletRequest request) {
         return "index";
     }
     @GetMapping(value = "/hackathon")
-    public String hackathon(Model model, HttpServletRequest request) {
+    public String hackathon(HttpServletRequest request) {
         return "hackathon";
     }
 
     @GetMapping(value = "/faq")
-    public String faq(Model model, HttpServletRequest request) {
+    public String faq(HttpServletRequest request) {
         return "faq";
     }
 
     @GetMapping(value = "/prizes")
-    public String prizes(Model model, HttpServletRequest request) {
+    public String prizes( HttpServletRequest request) {
         return "prizes";
     }
 
     @GetMapping(value = "/eligibility")
-    public String eligibility(Model model, HttpServletRequest request) {
+    public String eligibility(HttpServletRequest request) {
         return "eligibility";
     }
 
     @GetMapping(value = "/cca")
-    public String cca(Model model, HttpServletRequest request) {
+    public String cca(HttpServletRequest request) {
         return "CCA";
     }
     @GetMapping(value = "/resources")
-    public String resources(Model model, HttpServletRequest request) {
+    public String resources( HttpServletRequest request) {
         return "resources";
     }
 
     @GetMapping(value = "/team")
-    public String team(Model model, HttpServletRequest request) {
+    public String team(HttpServletRequest request) {
         return "team";
     }
 
