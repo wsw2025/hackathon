@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class IndexController {
 
     @GetMapping(value = "/")
-    public String index(HttpServletRequest request) {
-        return "index";
-    }
-    @GetMapping(value = "/hackathon")
     public String hackathon(HttpServletRequest request) {
         return "hackathon";
     }
+//    @GetMapping(value = "/hackathon")
+//    public String hackathon(HttpServletRequest request) {
+//        return "hackathon";
+//    }
 
     @GetMapping(value = "/faq")
     public String faq(HttpServletRequest request) {
@@ -32,21 +32,6 @@ public class IndexController {
     public String eligibility(HttpServletRequest request) {
         return "eligibility";
     }
-
-    @GetMapping(value = "/cca")
-    public String cca(HttpServletRequest request) {
-        return "CCA";
-    }
-    @GetMapping(value = "/resources")
-    public String resources( HttpServletRequest request) {
-        return "resources";
-    }
-
-    @GetMapping(value = "/team")
-    public String team(HttpServletRequest request) {
-        return "team";
-    }
-
 
 
 
