@@ -1,4 +1,4 @@
-Hi, this is the source code for the CSCouncil/Hackathon website.
+Hi, this is the source code for the Hackathon website.
 
 ### How to run the web: ###
 To run the web, please go to src/main/java/com/xin/aoc/WebApp.java and click run. 
